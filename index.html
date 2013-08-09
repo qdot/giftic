@@ -5,17 +5,74 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<script src="jquery-2.0.3.min.js" ></script>
 		<script type="text/javascript" src="libgif.js"></script>
-    <script type="text/javascript" src="demo.js"></script>
+		<script type="text/javascript" src="jsfeat-min.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+		<link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
 		<title>FeelGIF</title>	
 	</head>
 	<body>
-		<input id="url" value="insert picture url here..." type="text" /><input id="submit" value="submit" type="submit" />
-		<div style="display:block">
-			<div id="gifcanvas" position="relative"></div>
-			<div id="newgifcanvas">
+		<div id="fileinput">
+			<input id="url" value="file:///home/qdot/code/git-projects/feelgif/test.gif" type="text" /><input id="filesubmit" value="submit" type="submit" />
+		</div>
+		<div id="preprocessing">
+			<a id="newfile"><i class="icon-circle-arrow-left"></i> Open a new file</a>
+			<div>
+				<div id="pregif">
+					<div id="pregifcanvas" class="gifdiv"></div>
+				</div>
+				<div id="preoptions">
+					<ul>
+						<li id="play"><i class="icon-play"></i></li>						
+						<li id="pause"><i class="icon-pause"></i></li>						
+						<li id="stop"><i class="icon-stop"></i></li>
+						<li id="backward"><i class="icon-step-backward"></i></li>
+						<li id="forward"><i class="icon-step-forward"></i></li>
+					</ul>
+					<ul>
+						<li><i class="icon-resize-horizontal"></i></li>
+						<li><i class="icon-edit"></i></li>
+					</ul>
+					<ul>
+						<li><i class="icon-tag"></i></li>
+						<li><i class="icon-plus-sign-alt"></i></li>
+						<li><i class="icon-minus-sign-alt"></i></li>
+					</ul>					
+					<ul>
+						<li><i class="icon-upload"></i></li>
+					</ul>
+					<ul>
+						<li><i class="icon-arrow-right"></i></li>
+					</ul>
+				</div>
 			</div>
 		</div>
-		<div id="cutcanvas">
+		<div id="postprocessing">
+			<a id="newfile"><i class="icon-circle-arrow-left"></i> Open a new file</a> | <a id="processing"><i class="icon-circle-arrow-left"></i> Change processing options</a> 
+			<div>
+				<div id="postgif">
+					<div id="postgifcanvas" class="gifdiv"></div>
+				</div>
+				<div id="postoptions">
+					<ul>
+						<li><i class="icon-play"></i></li>						
+						<li><i class="icon-pause"></i></li>						
+						<li><i class="icon-stop"></i></li>
+						<li><i class="icon-step-backward"></i></li>
+						<li><i class="icon-step-forward"></i></li>
+					</ul>
+					<ul>
+						<li><i class="icon-tag"></i></li>
+						<li><i class="icon-plus-sign-alt"></i></li>
+						<li><i class="icon-minus-sign-alt"></i></li>
+					</ul>					
+					<ul>
+						<li><i class="icon-download"></i></li>
+					</ul>
+					<ul>
+						<li><i class="icon-arrow-right"></i></li>
+					</ul>
+				</div>
+			</div>
 		</div>
 	</body>
 </html>

@@ -1,10 +1,18 @@
-#gifcanvas {
-		position: relative;
+#pregif {
+		float: left;
 }
 
-#imgdiv {
-		width: 100%;
-		height: 100%;
+#pregifcanvas {
+		position:relative;
+}
+
+#preoptions {
+		float: left;
+		margin-left: 5px;
+}
+
+#postgif {
+		position: relative;
 }
 
 #canvasdiv {
@@ -13,4 +21,31 @@
 		left: 0px;
 		width:100%;
 		height:100%;
+}
+
+.gifdiv {
+		position: absolute;
+}
+
+ul {
+    list-style: none;
+		padding: 0px;
+		margin-left: 0px;
+		margin-right: 0px;
+		margin-top: 0px;
+		margin-bottom: 5px;
+}
+
+li {
+		display: inline;
+		margin-left: 3px;
+		cursor: pointer;
+}
+
+#preprocessing {
+		display: none;
+}
+
+#postprocessing {
+		display: none;
 }

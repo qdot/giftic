@@ -800,21 +800,21 @@ var SuperGif = function ( options ) {
 		move_relative: player.move_relative,
 		move_to: player.move_to,
 
-    add_frame: function(frame) {
-      if (!initialized ) init();
-      frames.push(frame);
-    },
-    force_finish: function() {
-			canvas.width = gif.width;
-			canvas.height = gif.height;
-			player.init();
-			loading = false;
-			register_canvas_handers();
-			if (load_callback)
-			{
-				load_callback();
-			}
-    },
+    // add_frame: function(frame) {
+    //   if (!initialized ) init();
+    //   frames.push(frame);
+    // },
+    // force_finish: function() {
+		// 	canvas.width = gif.width;
+		// 	canvas.height = gif.height;
+		// 	player.init();
+		// 	loading = false;
+		// 	register_canvas_handers();
+		// 	if (load_callback)
+		// 	{
+		// 		load_callback();
+		// 	}
+    // },
 		// getters for instance vars
 		get_playing: function() {
 			return player.playing;
