@@ -1,55 +1,55 @@
 /*
-	SuperGif
+ SuperGif
 
-	Example usage:
+ Example usage:
 
-		<img src="./example1_preview.gif" rel:animated_src="./example1.gif" width="360" height="360" rel:auto_play="1" />
+ <img src="./example1_preview.gif" rel:animated_src="./example1.gif" width="360" height="360" rel:auto_play="1" />
 
-		<script type="text/javascript">
-			$$('img').each(function (img_tag) {
-				if (/.*\.gif/.test(img_tag.src)) {
-					var rub = new SuperGif({ gif: img_tag } );
-					rub.load();
-				}
-			});
-		</script>
+ <script type="text/javascript">
+ $$('img').each(function (img_tag) {
+ if (/.*\.gif/.test(img_tag.src)) {
+ var rub = new SuperGif({ gif: img_tag } );
+ rub.load();
+ }
+ });
+ </script>
 
-	Image tag attributes:
+ Image tag attributes:
 
-		rel:animated_src -	If this url is specified, it's loaded into the player instead of src.
-							This allows a preview frame to be shown until animated gif data is streamed into the canvas
+ rel:animated_src -	If this url is specified, it's loaded into the player instead of src.
+ This allows a preview frame to be shown until animated gif data is streamed into the canvas
 
-		rel:auto_play -		Defaults to 1 if not specified. If set to zero, a call to the play() method is needed
+ rel:auto_play -		Defaults to 1 if not specified. If set to zero, a call to the play() method is needed
 
-		rel:rubbable -		Defaults to 0 if not specified. If set to 1, the gif will be a canvas with handlers to handle rubbing.
+ rel:rubbable -		Defaults to 0 if not specified. If set to 1, the gif will be a canvas with handlers to handle rubbing.
 
-	Constructor options
+ Constructor options
 
-		gif 				Required. The DOM element of an img tag.
-		auto_play 			Optional. Same as the rel:auto_play attribute above, this arg overrides the img tag info.
-		max_width			Optional. Scale images over max_width down to max_width. Helpful with mobile.
-		rubbable			Optional. Make it rubbable.
+ gif 				Required. The DOM element of an img tag.
+ auto_play 			Optional. Same as the rel:auto_play attribute above, this arg overrides the img tag info.
+ max_width			Optional. Scale images over max_width down to max_width. Helpful with mobile.
+ rubbable			Optional. Make it rubbable.
 
-	Instance methods
+ Instance methods
 
-		// loading
-		load( callback )	Loads the gif into a canvas element and then calls callback if one is passed
+ // loading
+ load( callback )	Loads the gif into a canvas element and then calls callback if one is passed
 
-		// play controls
-		play -				Start playing the gif
-		pause -				Stop playing the gif
-		move_to(i) -		Move to frame i of the gif
-		move_relative(i) -	Move i frames ahead (or behind if i < 0)
+ // play controls
+ play -				Start playing the gif
+ pause -				Stop playing the gif
+ move_to(i) -		Move to frame i of the gif
+ move_relative(i) -	Move i frames ahead (or behind if i < 0)
 
-		// getters
-		get_canvas			The canvas element that the gif is playing in. Handy for assigning event handlers to.
-		get_playing			Whether or not the gif is currently playing
-		get_loading			Whether or not the gif has finished loading/parsing
-		get_auto_play		Whether or not the gif is set to play automatically
-		get_length			The number of frames in the gif
-		get_current_frame	The index of the currently displayed frame of the gif
+ // getters
+ get_canvas			The canvas element that the gif is playing in. Handy for assigning event handlers to.
+ get_playing			Whether or not the gif is currently playing
+ get_loading			Whether or not the gif has finished loading/parsing
+ get_auto_play		Whether or not the gif is set to play automatically
+ get_length			The number of frames in the gif
+ get_current_frame	The index of the currently displayed frame of the gif
 
-*/
+ */
 
 // Generic functions
 var bitsToNum = function (ba) {
@@ -572,6 +572,9 @@ var SuperGif = function ( options ) {
 		var showingInfo = false;
 		var pinned = false;
 
+    var moveEvent = document.createEvent("Event");
+    moveEvent.initEvent("gifmove",true,true);
+
 		var stepFrame = function (delta) { // XXX: Name is confusing.
 			i = (i + delta + frames.length) % frames.length;
 			curFrame = i + 1;
@@ -589,6 +592,7 @@ var SuperGif = function ( options ) {
 				stepFrame(forward ? 1 : -1);
 				var delay = frames[i].delay * 10;
 				if (!delay) delay = 100; // FIXME: Should this even default at all? What should it be?
+        document.dispatchEvent(moveEvent);
 				setTimeout(doStep, delay);
 			};
 
@@ -637,12 +641,12 @@ var SuperGif = function ( options ) {
 			playing: playing,
 			move_relative: stepFrame,
 			current_frame: function() { return i; },
-			length: function() { return frames.length },
+			length: function() { return frames.length; },
 			move_to: function ( frame_idx ) {
 				i = frame_idx;
 				putFrame();
 			}
-		}
+		};
 	}());
 
 	var doDecodeProgress = function (draw) {
@@ -664,64 +668,64 @@ var SuperGif = function ( options ) {
 
 	var register_canvas_handers = function () {
 
-			var maxTime = 1000,
+		var maxTime = 1000,
 				// allow movement if < 1000 ms (1 sec)
 				maxDistance = Math.floor(canvas.width / (player.length() * 2)),
 				// swipe movement of 50 pixels triggers the swipe
 				startX = 0,
 				startTime = 0;
 
-			var cantouch = "ontouchend" in document;
+		var cantouch = "ontouchend" in document;
 
-			var aj = 0;
-			var last_played = 0;
+		var aj = 0;
+		var last_played = 0;
 
-			var startup = function (e) {
-				// prevent image drag (Firefox)
-				e.preventDefault();
-				if (options.auto_play) player.pause();
+		var startup = function (e) {
+			// prevent image drag (Firefox)
+			e.preventDefault();
+			if (options.auto_play) player.pause();
 
-				var pos = (e.touches && e.touches.length > 0) ? e.touches[0] : e;
+			var pos = (e.touches && e.touches.length > 0) ? e.touches[0] : e;
 
-				var x = (pos.layerX > 0) ? pos.layerX : canvas.width / 2;
-				var progress = x / canvas.width;
+			var x = (pos.layerX > 0) ? pos.layerX : canvas.width / 2;
+			var progress = x / canvas.width;
 
-				player.move_to( Math.floor(progress * (player.length() - 1)) );
-				
+			player.move_to( Math.floor(progress * (player.length() - 1)) );
+
+			startTime = e.timeStamp;
+			startX = pos.pageX;
+		};
+		canvas.addEventListener((cantouch) ? 'touchstart' : 'mousedown', startup );
+
+		var shutdown = function (e) {
+			startTime = 0;
+			startX = 0;
+			if (options.auto_play) player.play();
+		};
+		canvas.addEventListener((cantouch) ? 'touchend' : 'mouseup', shutdown);
+
+		var moveprogress = function (e) {
+			e.preventDefault();
+			var pos = (e.touches && e.touches.length > 0) ? e.touches[0] : e;
+
+			var currentX = pos.pageX;
+			currentDistance = (startX === 0) ? 0 : Math.abs(currentX - startX);
+			// allow if movement < 1 sec
+			currentTime = e.timeStamp;
+			if (startTime !== 0 && currentDistance > maxDistance) {
+				if (currentX < startX && player.current_frame() > 0) {
+					player.move_relative(-1);
+				}
+				if (currentX > startX && player.current_frame() < player.length() - 1) {
+					player.move_relative(1);
+				}
 				startTime = e.timeStamp;
 				startX = pos.pageX;
-			};
-			canvas.addEventListener((cantouch) ? 'touchstart' : 'mousedown', startup );
+			}
 
-			var shutdown = function (e) {
-				startTime = 0;
-				startX = 0;
-				if (options.auto_play) player.play();
-			};
-			canvas.addEventListener((cantouch) ? 'touchend' : 'mouseup', shutdown);
-
-			var moveprogress = function (e) {
-				e.preventDefault();
-				var pos = (e.touches && e.touches.length > 0) ? e.touches[0] : e;
-
-				var currentX = pos.pageX;
-				currentDistance = (startX === 0) ? 0 : Math.abs(currentX - startX);
-				// allow if movement < 1 sec
-				currentTime = e.timeStamp;
-				if (startTime !== 0 && currentDistance > maxDistance) {
-					if (currentX < startX && player.current_frame() > 0) {
-						player.move_relative(-1);
-					}
-					if (currentX > startX && player.current_frame() < player.length() - 1) {
-						player.move_relative(1);
-					}
-					startTime = e.timeStamp;
-					startX = pos.pageX;
-				}
-
-			};
-			canvas.addEventListener((cantouch) ? 'touchmove' : 'mousemove', moveprogress);
 		};
+		canvas.addEventListener((cantouch) ? 'touchmove' : 'mousemove', moveprogress);
+	};
 
 
 	var handler = {
@@ -742,7 +746,7 @@ var SuperGif = function ( options ) {
 			canvas.height = hdr.height;
 			player.init();
 			loading = false;
-			register_canvas_handers();
+			// register_canvas_handers();
 			if (load_callback)
 			{
 				load_callback();
@@ -752,28 +756,28 @@ var SuperGif = function ( options ) {
 	};
 
 	var init = function () {
-			var parent = gif.parentNode;
+		var parent = gif.parentNode;
 
-			var div = document.createElement('div');
-			canvas = document.createElement('canvas');
-			ctx = canvas.getContext('2d');
-			toolbar = document.createElement('div');
+		var div = document.createElement('div');
+		canvas = document.createElement('canvas');
+		ctx = canvas.getContext('2d');
+		toolbar = document.createElement('div');
 
-			tmpCanvas = document.createElement('canvas');
+		tmpCanvas = document.createElement('canvas');
 
-			div.width = canvas.width = gif.width;
-			div.height = canvas.height = gif.height;
-			toolbar.style.minWidth = gif.width + 'px';
+		div.width = canvas.width = gif.width;
+		div.height = canvas.height = gif.height;
+		toolbar.style.minWidth = gif.width + 'px';
 
-			div.className = 'jsgif';
-			toolbar.className = 'jsgif_toolbar';
-			div.appendChild(canvas);
-			div.appendChild(toolbar);
+		div.className = 'jsgif';
+		toolbar.className = 'jsgif_toolbar';
+		div.appendChild(canvas);
+		div.appendChild(toolbar);
     
-      if (parent) {
-			  parent.insertBefore(div, gif);
-			  parent.removeChild(gif);
-      }
+    if (parent) {
+			parent.insertBefore(div, gif);
+			parent.removeChild(gif);
+    }
 
 	};
 
@@ -823,7 +827,7 @@ var SuperGif = function ( options ) {
 			return canvas;
 		},
 		get_loading: function() {
-			return loading
+			return loading;
 		},
 		get_auto_play: function() {
 			return options.auto_play;
