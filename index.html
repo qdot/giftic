@@ -4,7 +4,8 @@
 		<link rel="stylesheet" href="style.css" type="text/css" media="screen" />
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 		<script src="jquery-2.0.3.min.js" ></script>
-		<script type="text/javascript" src="libgif.js"></script>
+		<script type="text/javascript" src="gifloader.js"></script>
+		<script type="text/javascript" src="spritecanvas.js"></script>
 		<script type="text/javascript" src="jsfeat-min.js"></script>
     <script type="text/javascript" src="app.js"></script>
 		<link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
@@ -12,7 +13,9 @@
 	</head>
 	<body>
 		<div id="fileinput">
-			<input id="url" value="file:///home/qdot/code/git-projects/feelgif/test.gif" type="text" /><input id="filesubmit" value="submit" type="submit" />
+			URL: <input id="gifurl" value="file:///home/qdot/code/git-projects/feelgif/test.gif" type="text" />
+			Or File: <input id="giffile" type="file" />
+			<input id="gifsubmit" value="submit" type="submit" />
 		</div>
 		<div id="preprocessing">
 			<a id="newfile"><i class="icon-circle-arrow-left"></i> Open a new file</a>

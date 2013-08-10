@@ -43,6 +43,14 @@ $(document).ready(function() {
         document.getElementById("loopgif").style.color = "red";
       }
     });
+    function updateControls(event) {
+      if(!gif.get_looping()) {
+        document.getElementById("play").style.color = "black";
+        document.getElementById("stop").style.color = "red";
+        document.getElementById("pause").style.color = "black";
+      }
+    }
+    document.addEventListener('gifloop', updateControls, false);
   };
 
   var _setupOpticalFlow = function(canvas) {
@@ -159,17 +167,23 @@ $(document).ready(function() {
     HTMLCanvasElement.prototype.relMouseCoords = relMouseCoords;
     demo_app();
     document.addEventListener('gifmove', tick, false);
+
   };
 
-  document.getElementById("filesubmit").addEventListener('click', (function() {
+  document.getElementById("gifsubmit").addEventListener('click', (function() {
 		var drawdiv = document.getElementById("pregifcanvas");
-    var img = document.createElement('img');
-    img.src = document.getElementById("url").value;
-    img.onload = function() {
-      // Create canvas element
+    var src;
+    if(document.getElementById("giffile").value != "") {
+      src = document.getElementById("giffile").value;
+    } else {
+      src = document.getElementById("gifurl").value;
+    }
+    // img.onload = function() {
+    //   // Create canvas element
 
-      var gif = new SuperGif({ gif: img, auto_play: false, rubbable: false });
-      gif.load();
+      var gif = new SpriteCanvas({ auto_play: false, rubbable: false });
+      var loader = new GifLoader(gif);
+      loader.load(src);
       gif.setloop(false);
       drawdiv.appendChild(gif.get_canvas());
       _setupGifControls(gif);
@@ -177,6 +191,6 @@ $(document).ready(function() {
       document.getElementById("stop").style.color = "red";
       fileinput.style.display = "none";
       preprocessing.style.display = "block";
-    };
+    // };
   }));
 });

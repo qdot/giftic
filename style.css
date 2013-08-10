@@ -40,6 +40,10 @@ ul {
 		display: block;
 }
 
+input {
+		display: block;
+}
+
 li {
 		display: inline;
 		margin-left: 3px;
