@@ -94,6 +94,12 @@ $(document).ready(function() {
       prune_oflow_points(ctx);
     }
 
+    function on_point_list_click(e) {
+      document.getElementById("points").removeChild(this);
+      //TODO: Reset animation
+      //TODO: Rebuild curr_xy list
+    }
+
     function on_canvas_click(e) {
       var coords = canvas.relMouseCoords(e);
       if(coords.x > 0 & coords.y > 0 & coords.x < canvasWidth & coords.y < canvasHeight) {
@@ -101,6 +107,12 @@ $(document).ready(function() {
         curr_xy[(point_count<<1)+1] = coords.y;
         draw_circle(ctx, curr_xy[point_count<<1], curr_xy[(point_count<<1)+1]);
         point_count++;
+        var li = document.createElement("li");
+        li.setAttribute("id", "point" + point_count.toString());
+        var text = document.createTextNode(coords.x.toString() + ", " + coords.y.toString());
+        li.appendChild(text);
+        li.addEventListener("click", on_point_list_click);
+        document.getElementById("points").appendChild(li);
       }
     }
     canvas.addEventListener('click', on_canvas_click, false);
