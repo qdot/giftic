@@ -49,13 +49,13 @@ input {
     margin-left: 3px;
 }
 
+#pointlist a:hover {
+    color: #00FFFF;
+}
+
 li {
     display: inline;
     margin-left: 3px;
-}
-
-.point_link a:hover {
-    color: yellow;
 }
 
 #newpoint {

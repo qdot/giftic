@@ -167,6 +167,7 @@ $(document).ready(function() {
     var points = [];
     var canvas;
     var ctx;
+    var overidx = -1;
 
     function on_point_list_click(e) {
       var targ;
@@ -175,6 +176,7 @@ $(document).ready(function() {
       var id = targ.getAttribute("rel:index");
       points.splice(id, 1);
       rebuild_point_list();
+      sprite.move_to(sprite.get_current_frame());
     }
 
     function rebuild_point_list() {
@@ -184,7 +186,6 @@ $(document).ready(function() {
       }
       points.forEach(function(element, index, array) {
         var li = document.createElement("li");
-        li.setAttribute("class", "pointlink");
         var a = document.createElement("a");
         switch(element.get_status()) {
         case 0:
@@ -201,9 +202,24 @@ $(document).ready(function() {
         var text = document.createTextNode(element.get_frame_point(0).x.toString() + ", " + element.get_frame_point(0).y.toString());
         a.appendChild(text);
         li.appendChild(a);
-        li.addEventListener("click", on_point_list_click);
+        a.addEventListener("click", on_point_list_click);
+        a.onmouseover = on_point_mouse_over;
+        a.onmouseout = on_point_mouse_out;
         document.getElementById("pointlist").appendChild(li);
       });
+    }
+
+    function on_point_mouse_over(e) {
+      var targ;
+      if (e.target) targ = e.target;
+      else if (e.srcElement) targ = e.srcElement;
+      overidx = targ.getAttribute("rel:index");
+      drawPoints();
+    }
+
+    function on_point_mouse_out(e) {
+      overidx = -1;
+      drawPoints();
     }
 
     function on_canvas_click(e) {
@@ -225,6 +241,9 @@ $(document).ready(function() {
         break;
       case 2:
         ctx.fillStyle = "rgb(0,0,255)";
+        break;
+      case 3:
+        ctx.fillStyle = "rgb(0,128,128)";
         break;
       }
       ctx.beginPath();
@@ -256,7 +275,11 @@ $(document).ready(function() {
       for(var i = 0; i < points.length; ++i) {
         p = points[i].get_frame_point(cur_frame);
         if (p) {
-          draw_circle(p.x, p.y, points[i].get_status());
+          if (i == overidx) {
+            draw_circle(p.x, p.y, 3);
+          } else {
+            draw_circle(p.x, p.y, points[i].get_status());
+          }
         }
       }
     };
