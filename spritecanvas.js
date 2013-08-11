@@ -47,11 +47,9 @@ var SpriteCanvas = function ( options ) {
         ctx.putImageData(frames[frames.length - 1].data, 0, 0);
       }
       // XXX Figure out alpha fillRect.
-      //ctx.fillStyle = 'salmon';
       ctx.fillStyle = 'rgba(255,255,255,0.4)';
       ctx.fillRect(mid, top, canvas.width - mid, height);
 
-      //ctx.fillStyle = 'teal';
       ctx.fillStyle = 'rgba(255,0,22,.8)';
       ctx.fillRect(0, top, (pos / length) * canvas.width, height);
 
@@ -155,7 +153,7 @@ var SpriteCanvas = function ( options ) {
         }
       },
       setloop: setloop,
-      current_frame: i,
+      current_frame: function() { return i; },
       step: step,
       play: play,
       pause: pause,
@@ -233,9 +231,6 @@ var SpriteCanvas = function ( options ) {
     if (initialized) return;
     canvas = document.createElement('canvas');
     ctx = canvas.getContext('2d');
-
-    //canvas.width = gif.width;
-    //canvas.height = gif.height;
     initialized = true;
   };
 
@@ -248,7 +243,6 @@ var SpriteCanvas = function ( options ) {
     {
       return 1;
     }
-
   };
 
   var canvas, ctx;
@@ -285,12 +279,15 @@ var SpriteCanvas = function ( options ) {
     get_current_frame: function() {
       return player.current_frame();
     },
-    onLoadInfo : onLoadInfo,
-    onLoadFrame : onLoadFrame,
-    onLoadError : onLoadError,
-    onLoadSuccess : onLoadSuccess,
-    onLoadProgress : onLoadProgress
-
+    get_loader: function() {
+      return {
+        onLoadInfo : onLoadInfo,
+        onLoadFrame : onLoadFrame,
+        onLoadError : onLoadError,
+        onLoadSuccess : onLoadSuccess,
+        onLoadProgress : onLoadProgress
+      };
+    }
   };
 
 };

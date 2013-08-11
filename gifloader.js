@@ -474,7 +474,6 @@ var GifLoader = function ( sprite ) {
       doDecodeProgress(false);
       sprite.onLoadSuccess();
       loading = false;
-      // register_canvas_handers();
       if (load_callback)
       {
         load_callback();
@@ -490,10 +489,6 @@ var GifLoader = function ( sprite ) {
 
       var h = new XMLHttpRequest();
       h.overrideMimeType('text/plain; charset=x-user-defined');
-      h.onloadstart = function() {
-        // Wait until connection is oppened to replace the gif element with a canvas to avoid a blank img
-        sprite.init();
-      };
       h.onload = function(e) {
         stream = new Stream(h.responseText);
         setTimeout(doParse, 0);
