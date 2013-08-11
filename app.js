@@ -45,7 +45,6 @@ $(document).ready(function() {
     var prev_img_pyr;
     var point_count;
     var point_status;
-    var points = [];
     var prev_xy;
     var curr_xy;
 
@@ -59,17 +58,21 @@ $(document).ready(function() {
     var options = new opts();
 
     var analyze = function(sprite, points) {
+      if (!points.length) {
+        return;
+      }
       curr_img_pyr = new jsfeat.pyramid_t(3);
       prev_img_pyr = new jsfeat.pyramid_t(3);
+      sprite.move_to(0);
       var canvas = sprite.get_canvas();
       var ctx = canvas.getContext("2d");
       curr_img_pyr.allocate(canvas.width, canvas.height, jsfeat.U8_t|jsfeat.C1_t);
       prev_img_pyr.allocate(canvas.width, canvas.height, jsfeat.U8_t|jsfeat.C1_t);
 
       point_status = new Uint8Array(points.length);
+      point_count = points.length;
       prev_xy = new Float32Array(points.length*2);
       curr_xy = new Float32Array(points.length*2);
-      points = points;
       var cur_frame;
       var imageData;
       var i;
@@ -95,16 +98,29 @@ $(document).ready(function() {
                                      options.max_iterations|0, point_status,
                                      options.epsilon, options.min_eigen);
         var current_point = 0;
+        var new_point_count = 0;
         for (i = 0; i < point_count; ++i) {
           while(points[current_point].get_last_point().status == 0) {
             current_point = current_point + 1;
           }
+          if (current_point == points.length) {
+            return;
+          }
           points[current_point].add_frame_point(curr_xy[i*2], curr_xy[(i*2)+1], point_status[i]);
-          if (!point_status[i]) {
-            curr_xy.splice(i*2, 2);
-            point_count = point_count - 1;
+          if (point_status[i]) {
+            if (new_point_count != i) {
+              // No splice for array buffers. :(
+              curr_xy[new_point_count*2] = curr_xy[i*2];
+              curr_xy[(new_point_count*2)+1] = curr_xy[(i*2)+1];
+            }
+            new_point_count = new_point_count + 1;
           }
         }
+        // Out of points to process. Exit.
+        if(!new_point_count) {
+          return;
+        }
+        point_count = new_point_count;
         sprite.move_relative(1);
       } while(cur_frame < sprite.get_current_frame());
     };
@@ -242,7 +258,7 @@ $(document).ready(function() {
     });
     document.getElementById("analyze").addEventListener("click", function() {
       var o = new OpticalFlowAnalyzer();
-      o.analyze(sprite, points);
+      o.analyze(gif, points);
     });
     function updateControls(event) {
       if(!sprite.get_looping()) {
