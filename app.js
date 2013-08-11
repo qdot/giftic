@@ -2,6 +2,8 @@
 
 $(document).ready(function() {
 
+  var use_old = false;
+
   var PointFrameArray = function(x, y) {
     var points = [];
 
@@ -41,13 +43,6 @@ $(document).ready(function() {
   };
 
   var OpticalFlowAnalyzer = function () {
-    var curr_img_pyr;
-    var prev_img_pyr;
-    var point_count;
-    var point_status;
-    var prev_xy;
-    var curr_xy;
-
     var opts = function() {
       this.win_size = 20;
       this.max_iterations = 30;
@@ -61,11 +56,21 @@ $(document).ready(function() {
       if (!points.length) {
         return;
       }
-      curr_img_pyr = new jsfeat.pyramid_t(3);
-      prev_img_pyr = new jsfeat.pyramid_t(3);
-      sprite.move_to(0);
+
+      var curr_img_pyr;
+      var prev_img_pyr;
+      var point_count;
+      var point_status;
+      var prev_xy;
+      var curr_xy;
       var canvas = sprite.get_canvas();
       var ctx = canvas.getContext("2d");
+      var cur_frame;
+      var imageData;
+      var i;
+
+      curr_img_pyr = new jsfeat.pyramid_t(3);
+      prev_img_pyr = new jsfeat.pyramid_t(3);
       curr_img_pyr.allocate(canvas.width, canvas.height, jsfeat.U8_t|jsfeat.C1_t);
       prev_img_pyr.allocate(canvas.width, canvas.height, jsfeat.U8_t|jsfeat.C1_t);
 
@@ -73,15 +78,20 @@ $(document).ready(function() {
       point_count = points.length;
       prev_xy = new Float32Array(points.length*2);
       curr_xy = new Float32Array(points.length*2);
-      var cur_frame;
-      var imageData;
-      var i;
       for (i = 0; i < points.length; ++i) {
         curr_xy[i*2] = points[i].get_frame_point(0).x;
         curr_xy[(i*2)+1] = points[i].get_frame_point(0).y;
       }
+
+      // build first frame
+      sprite.move_to(0);
+      imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      jsfeat.imgproc.grayscale(imageData.data, curr_img_pyr.data[0].data);
+      curr_img_pyr.build(curr_img_pyr.data[0], true);
+      sprite.move_to(1);
       do {
         imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
         // swap flow data
         var _pt_xy = prev_xy;
         prev_xy = curr_xy;
@@ -89,17 +99,19 @@ $(document).ready(function() {
         var _pyr = prev_img_pyr;
         prev_img_pyr = curr_img_pyr;
         curr_img_pyr = _pyr;
+
         jsfeat.imgproc.grayscale(imageData.data, curr_img_pyr.data[0].data);
         curr_img_pyr.build(curr_img_pyr.data[0], true);
         jsfeat.optical_flow_lk.track(prev_img_pyr, curr_img_pyr, prev_xy, curr_xy, point_count, options.win_size|0, options.max_iterations|0, point_status, options.epsilon, options.min_eigen);
+
         var current_point = 0;
         var new_point_count = 0;
-        for (i = 0; i < point_count; ++i) {
-          while(points[current_point].get_last_point().status == 0) {
-            current_point = current_point + 1;
-          }
-          if (current_point == points.length) {
-            return;
+        for (i = 0; i < point_count && current_point < points.length; ++i) {
+          while(!points[current_point].get_last_point().status) {
+            current_point++;
+            if (current_point == points.length) {
+              return;
+            }
           }
           points[current_point].add_frame_point(curr_xy[i*2], curr_xy[(i*2)+1], point_status[i]);
           if (point_status[i]) {
@@ -110,6 +122,7 @@ $(document).ready(function() {
             }
             new_point_count = new_point_count + 1;
           }
+          current_point++;
         }
         // Out of points to process. Exit.
         if(!new_point_count) {
@@ -269,7 +282,7 @@ $(document).ready(function() {
   };
 
   document.getElementById("gifsubmit").addEventListener('click', (function() {
-		var drawdiv = document.getElementById("pregifcanvas");
+    var drawdiv = document.getElementById("pregifcanvas");
     var src;
     sprite = new SpriteCanvas({ auto_play: false, rubbable: false });
     sprite.init();
@@ -282,10 +295,10 @@ $(document).ready(function() {
     loader.load(src);
     canvas = sprite.get_canvas();
     ctx = canvas.getContext("2d");
-    canvas.addEventListener('click', on_canvas_click, false);
     sprite.setloop(false);
     drawdiv.appendChild(sprite.get_canvas());
     setupGifControls();
+    canvas.addEventListener('click', on_canvas_click, false);
     document.getElementById("fileinput").style.display = "none";
     document.getElementById("preprocessing").style.display = "block";
   }));
