@@ -81,7 +81,6 @@ $(document).ready(function() {
         curr_xy[(i*2)+1] = points[i].get_frame_point(0).y;
       }
       do {
-        cur_frame = sprite.get_current_frame();
         imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         // swap flow data
         var _pt_xy = prev_xy;
@@ -92,11 +91,7 @@ $(document).ready(function() {
         curr_img_pyr = _pyr;
         jsfeat.imgproc.grayscale(imageData.data, curr_img_pyr.data[0].data);
         curr_img_pyr.build(curr_img_pyr.data[0], true);
-        jsfeat.optical_flow_lk.track(prev_img_pyr, curr_img_pyr,
-                                     prev_xy, curr_xy, point_count,
-                                     options.win_size|0,
-                                     options.max_iterations|0, point_status,
-                                     options.epsilon, options.min_eigen);
+        jsfeat.optical_flow_lk.track(prev_img_pyr, curr_img_pyr, prev_xy, curr_xy, point_count, options.win_size|0, options.max_iterations|0, point_status, options.epsilon, options.min_eigen);
         var current_point = 0;
         var new_point_count = 0;
         for (i = 0; i < point_count; ++i) {
@@ -121,6 +116,7 @@ $(document).ready(function() {
           return;
         }
         point_count = new_point_count;
+        cur_frame = sprite.get_current_frame();
         sprite.move_relative(1);
       } while(cur_frame < sprite.get_current_frame());
     };
@@ -214,7 +210,7 @@ $(document).ready(function() {
   document.addEventListener('gifmove', drawPoints, false);
 
 
-  var setupGifControls = function(gif) {
+  var setupGifControls = function() {
     document.getElementById("stop").style.color = "red";
     document.getElementById("play").style.color = "black";
     document.getElementById("pause").style.color = "black";
@@ -258,7 +254,9 @@ $(document).ready(function() {
     });
     document.getElementById("analyze").addEventListener("click", function() {
       var o = new OpticalFlowAnalyzer();
-      o.analyze(gif, points);
+      document.removeEventListener('gifmove', drawPoints, false);
+      o.analyze(sprite, points);
+      document.addEventListener('gifmove', drawPoints, false);
     });
     function updateControls(event) {
       if(!sprite.get_looping()) {
@@ -287,7 +285,7 @@ $(document).ready(function() {
     canvas.addEventListener('click', on_canvas_click, false);
     sprite.setloop(false);
     drawdiv.appendChild(sprite.get_canvas());
-    setupGifControls(sprite);
+    setupGifControls();
     document.getElementById("fileinput").style.display = "none";
     document.getElementById("preprocessing").style.display = "block";
   }));
