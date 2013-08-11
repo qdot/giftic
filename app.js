@@ -4,12 +4,7 @@ $(document).ready(function() {
 
   var PointFrameArray = function(x, y) {
     var points = [];
-
-    var Point = {
-      x : 0,
-      y : 0,
-      status : 1
-    };
+    var status = 2;
 
     var getFramePoint = function(i) {
       if (i < points.length) {
@@ -18,8 +13,8 @@ $(document).ready(function() {
       return null;
     };
 
-    var addFramePoint = function(x, y, status) {
-      points.push({x : x, y : y, status : status});
+    var addFramePoint = function(x, y) {
+      points.push({x : x, y : y});
     };
 
     var getLastPoint = function(p) {
@@ -29,10 +24,12 @@ $(document).ready(function() {
       return points[points.length - 1];
     };
 
-    addFramePoint(x, y, 1);
+    addFramePoint(x, y);
 
     return {
       points : points,
+      set_status : function (s) { status = s; },
+      get_status : function () { return status; },
       get_last_point : getLastPoint,
       get_frame_point : getFramePoint,
       add_frame_point : addFramePoint,
@@ -105,13 +102,16 @@ $(document).ready(function() {
         var current_point = 0;
         var new_point_count = 0;
         for (i = 0; i < point_count && current_point < points.length; ++i) {
-          while(!points[current_point].get_last_point().status) {
+          while(!points[current_point].get_status()) {
             current_point++;
             if (current_point == points.length) {
               return;
             }
           }
-          points[current_point].add_frame_point(curr_xy[i*2], curr_xy[(i*2)+1], point_status[i]);
+
+          points[current_point].add_frame_point(curr_xy[i*2], curr_xy[(i*2)+1]);
+          points[current_point].set_status(point_status[i]);
+
           if (point_status[i]) {
             if (new_point_count != i) {
               // No splice for array buffers. :(
@@ -169,24 +169,64 @@ $(document).ready(function() {
     var ctx;
 
     function on_point_list_click(e) {
-      document.getElementById("pointlist").removeChild(this);
+      var targ;
+      if (e.target) targ = e.target;
+      else if (e.srcElement) targ = e.srcElement;
+      var id = targ.getAttribute("rel:index");
+      points.splice(id, 1);
+      rebuild_point_list();
+    }
+
+    function rebuild_point_list() {
+      var list = document.getElementById("pointlist");
+      while (list.firstChild) {
+        list.removeChild(list.firstChild);
+      }
+      points.forEach(function(element, index, array) {
+        var li = document.createElement("li");
+        li.setAttribute("class", "pointlink");
+        var a = document.createElement("a");
+        switch(element.get_status()) {
+        case 0:
+          a.setAttribute("id", "deadpoint");
+          break;
+        case 1:
+          a.setAttribute("id", "livepoint");
+          break;
+        case 2:
+          a.setAttribute("id", "newpoint");
+          break;
+        }
+        a.setAttribute("rel:index", index);
+        var text = document.createTextNode(element.get_frame_point(0).x.toString() + ", " + element.get_frame_point(0).y.toString());
+        a.appendChild(text);
+        li.appendChild(a);
+        li.addEventListener("click", on_point_list_click);
+        document.getElementById("pointlist").appendChild(li);
+      });
     }
 
     function on_canvas_click(e) {
       var coords = canvas.relMouseCoords(e);
       if(coords.x > 0 & coords.y > 0 & coords.x < canvas.width & coords.y < canvas.height) {
         points.push(new PointFrameArray(coords.x, coords.y));
-        draw_circle(coords.x, coords.y);
-        var li = document.createElement("li");
-        li.setAttribute("rel:index", points.length - 1);
-        var text = document.createTextNode(coords.x.toString() + ", " + coords.y.toString());
-        li.appendChild(text);
-        li.addEventListener("click", on_point_list_click);
-        document.getElementById("pointlist").appendChild(li);
+        draw_circle(coords.x, coords.y, 2);
+        rebuild_point_list();
       }
     }
 
-    function draw_circle(x, y) {
+    function draw_circle(x, y, status) {
+      switch(status) {
+      case 0:
+        ctx.fillStyle = "rgb(255,0,0)";
+        break;
+      case 1:
+        ctx.fillStyle = "rgb(0,255,0)";
+        break;
+      case 2:
+        ctx.fillStyle = "rgb(0,0,255)";
+        break;
+      }
       ctx.beginPath();
       ctx.arc(x, y, 4, 0, Math.PI*2, true);
       ctx.closePath();
@@ -212,11 +252,11 @@ $(document).ready(function() {
 
     var drawPoints = function() {
       var p;
-      var cur_frame = (sprite.get_current_frame() - 1);
+      var cur_frame = sprite.get_current_frame();
       for(var i = 0; i < points.length; ++i) {
         p = points[i].get_frame_point(cur_frame);
         if (p) {
-          draw_circle(p.x, p.y);
+          draw_circle(p.x, p.y, points[i].get_status());
         }
       }
     };
@@ -269,7 +309,10 @@ $(document).ready(function() {
         var o = new OpticalFlowAnalyzer();
         document.removeEventListener('gifmove', drawPoints, false);
         o.analyze(sprite, points);
+        rebuild_point_list();
         document.addEventListener('gifmove', drawPoints, false);
+        sprite.move_to(0);
+        drawPoints();
       });
       function updateControls(event) {
         if(!sprite.get_looping()) {

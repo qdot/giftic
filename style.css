@@ -1,59 +1,79 @@
 #pregif {
-		float: left;
+    float: left;
 }
 
 #pregifcanvas {
-		position:relative;
+    position:relative;
 }
 
 #preoptions {
-		float: left;
-		margin-left: 5px;
+    float: left;
+    margin-left: 5px;
 }
 
 #postgif {
-		position: relative;
+    position: relative;
 }
 
 #canvasdiv {
-		position: absolute;
-		top: 0px;
-		left: 0px;
-		width:100%;
-		height:100%;
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width:100%;
+    height:100%;
 }
 
 .gifdiv {
-		position: absolute;
+    position: absolute;
 }
 
 ul {
     list-style: none;
-		padding: 0px;
-		margin-left: 0px;
-		margin-right: 0px;
-		margin-top: 0px;
-		margin-bottom: 5px;
+    padding: 0px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    margin-bottom: 5px;
 }
 
 #points li {
-		display: block;
+    display: block;
 }
 
 input {
-		display: block;
+    display: block;
+}
+
+#pointlist li {
+    display: block;
+    margin-left: 3px;
 }
 
 li {
-		display: inline;
-		margin-left: 3px;
-		cursor: pointer;
+    display: inline;
+    margin-left: 3px;
+}
+
+.point_link a:hover {
+    color: yellow;
+}
+
+#newpoint {
+    color: blue;
+}
+
+#livepoint {
+    color: green;
+}
+
+#deadpoint {
+    color: red;
 }
 
 #preprocessing {
-		display: none;
+    display: none;
 }
 
 #postprocessing {
-		display: none;
+    display: none;
 }
