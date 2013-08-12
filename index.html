@@ -1,86 +1,89 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-		<link rel="stylesheet" href="style.css" type="text/css" media="screen" />
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-		<script src="jquery-2.0.3.min.js" ></script>
-		<script type="text/javascript" src="gifloader.js"></script>
-		<script type="text/javascript" src="spritecanvas.js"></script>
-		<script type="text/javascript" src="jsfeat.js"></script>
-		<script type="text/javascript" src="howler.js"></script>
-		<script type="text/javascript" src="jiggly.js"></script>
-		<script type="text/javascript" src="app.js"></script>
-		<link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-		<title>FeelGIF</title>	
-	</head>
-	<body>
-		<div id="fileinput">
-			URL: <input id="gifurl" value="test.gif" type="text" />
-			Or File: <input id="giffile" type="file" />
-			<input id="gifsubmit" value="submit" type="submit" />
-		</div>
-		<div id="preprocessing">
-			<a id="newfile"><i class="icon-circle-arrow-left"></i> Open a new file</a>
-			<div>
-				<div id="pregif">
-					<div id="pregifcanvas" class="gifdiv"></div>
-				</div>
-				<div id="preoptions">
-					<ul>
-						<li id="play"><i class="icon-play"></i></li>						
-						<li id="pause"><i class="icon-pause"></i></li>						
-						<li id="stop"><i class="icon-stop"></i></li>
-						<li id="backward"><i class="icon-step-backward"></i></li>
-						<li id="forward"><i class="icon-step-forward"></i></li>
-						<li id="loopgif"><i class="icon-refresh"></i></li>
-					</ul>
-					<ul>
-						<li><i class="icon-resize-horizontal"></i></li>
-						<li><i class="icon-edit"></i></li>
-					</ul>
-					<ul>
-						<li><i class="icon-tag"></i></li>
-						<li><i class="icon-plus-sign-alt"></i></li>
-						<li><i class="icon-minus-sign-alt"></i></li>
-					</ul>
-					<ul id="pointlist">
-					</ul>
-					<ul>
-						<li><i class="icon-upload"></i></li>
-					</ul>
-					<ul>
-						<li id="analyze"><i class="icon-arrow-right"></i></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-		<div id="postprocessing">
-			<a id="newfile"><i class="icon-circle-arrow-left"></i> Open a new file</a> | <a id="processing"><i class="icon-circle-arrow-left"></i> Change processing options</a> 
-			<div>
-				<div id="postgif">
-					<div id="postgifcanvas" class="gifdiv"></div>
-				</div>
-				<div id="postoptions">
-					<ul>
-						<li><i class="icon-play"></i></li>						
-						<li><i class="icon-pause"></i></li>						
-						<li><i class="icon-stop"></i></li>
-						<li><i class="icon-step-backward"></i></li>
-						<li><i class="icon-step-forward"></i></li>
-					</ul>
-					<ul>
-						<li><i class="icon-tag"></i></li>
-						<li><i class="icon-plus-sign-alt"></i></li>
-						<li><i class="icon-minus-sign-alt"></i></li>
-					</ul>					
-					<ul>
-						<li><i class="icon-download"></i></li>
-					</ul>
-					<ul>
-						<li><i class="icon-arrow-right"></i></li>
-					</ul>
-				</div>
-			</div>
-		</div>
-	</body>
-</html>
+    <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script src="jquery-2.0.3.min.js" ></script>
+    <script type="text/javascript" src="gifloader.js"></script>
+    <script type="text/javascript" src="spritecanvas.js"></script>
+    <script type="text/javascript" src="jsfeat.js"></script>
+    <script type="text/javascript" src="howler.js"></script>
+    <script type="text/javascript" src="jiggly.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
+      <title>FeelGIF</title>
+    </head>
+    <body>
+      <div id="fileinput">
+	URL: <input id="gifurl" value="test.gif" type="text" />
+	Or File: <input id="giffile" type="file" />
+	<input id="gifsubmit" value="submit" type="submit" />
+	<div><a onclick="gifurl.value = 'test.gif';">furry porn</a></div>
+	<div><a onclick="gifurl.value = 'test3.gif';">blowjob</a></div>
+	<div><a onclick="gifurl.value = 'test2.gif';">weird bouncing ball</a></div>
+      </div>
+      <div id="preprocessing">
+	<a id="newfile"><i class="icon-circle-arrow-left"></i> Open a new file</a>
+	<div>
+	  <div id="pregif">
+	    <div id="pregifcanvas" class="gifdiv"></div>
+	  </div>
+	  <div id="preoptions">
+	    <ul>
+	      <li id="play"><i class="icon-play"></i></li>
+	      <li id="pause"><i class="icon-pause"></i></li>
+	      <li id="stop"><i class="icon-stop"></i></li>
+	      <li id="backward"><i class="icon-step-backward"></i></li>
+	      <li id="forward"><i class="icon-step-forward"></i></li>
+	      <li id="loopgif"><i class="icon-refresh"></i></li>
+	    </ul>
+	    <ul>
+	      <li><i class="icon-resize-horizontal"></i></li>
+	      <li><i class="icon-edit"></i></li>
+	    </ul>
+	    <ul>
+	      <li><i class="icon-tag"></i></li>
+	      <li><i class="icon-plus-sign-alt"></i></li>
+	      <li><i class="icon-minus-sign-alt"></i></li>
+	    </ul>
+	    <ul id="pointlist">
+	    </ul>
+	    <ul>
+	      <li><i class="icon-upload"></i></li>
+	    </ul>
+	    <ul>
+	      <li id="analyze"><i class="icon-arrow-right"></i></li>
+	    </ul>
+	  </div>
+	</div>
+      </div>
+      <div id="postprocessing">
+	<a id="newfile"><i class="icon-circle-arrow-left"></i> Open a new file</a> | <a id="processing"><i class="icon-circle-arrow-left"></i> Change processing options</a>
+	<div>
+	  <div id="postgif">
+	    <div id="postgifcanvas" class="gifdiv"></div>
+	  </div>
+	  <div id="postoptions">
+	    <ul>
+	      <li><i class="icon-play"></i></li>
+	      <li><i class="icon-pause"></i></li>
+	      <li><i class="icon-stop"></i></li>
+	      <li><i class="icon-step-backward"></i></li>
+	      <li><i class="icon-step-forward"></i></li>
+	    </ul>
+	    <ul>
+	      <li><i class="icon-tag"></i></li>
+	      <li><i class="icon-plus-sign-alt"></i></li>
+	      <li><i class="icon-minus-sign-alt"></i></li>
+	    </ul>
+	    <ul>
+	      <li><i class="icon-download"></i></li>
+	    </ul>
+	    <ul>
+	      <li><i class="icon-arrow-right"></i></li>
+	    </ul>
+	  </div>
+	</div>
+      </div>
+    </body>
+  </html>
