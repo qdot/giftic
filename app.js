@@ -75,6 +75,9 @@ $(document).ready(function() {
         }
         frame_intensities.push(frames_is);
       }
+      if (frame_intensities.length == 0) {
+        return;
+      }
       var cmd = new CommandArray();
       var max = 0;
       var avg = 0;
