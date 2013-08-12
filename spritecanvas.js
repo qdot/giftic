@@ -92,11 +92,11 @@ var SpriteCanvas = function ( options ) {
 
     var stepFrame = function (delta) { // XXX: Name is confusing.
       i = (i + delta + frames.length) % frames.length;
+      delayInfo = frames[i].delay;
+      putFrame();
       if (i == frames.length - 1) {
         document.dispatchEvent(loopEvent);
       }
-      delayInfo = frames[i].delay;
-      putFrame();
     };
 
     var step = (function () {

@@ -2,9 +2,24 @@
 
 $(document).ready(function() {
 
+  var CommandArray = function() {
+    var commands = [];
+    var addCommand = function(s, d) {
+      commands.push({speed : s, direction : d});
+    };
+    return {
+      add_cmd : addCommand,
+      get_cmd : function (idx) { return commands[idx]; }
+    };
+  };
+
   var PointFrameArray = function(x, y) {
     var points = [];
     var status = 2;
+
+    var clearHistory = function() {
+      points.splice(1, points.length - 1);
+    };
 
     var getFramePoint = function(i) {
       if (i < points.length) {
@@ -30,10 +45,69 @@ $(document).ready(function() {
       points : points,
       set_status : function (s) { status = s; },
       get_status : function () { return status; },
+      clear_history : clearHistory,
       get_last_point : getLastPoint,
       get_frame_point : getFramePoint,
       add_frame_point : addFramePoint,
       get_num_points : function () { return points.length; }
+    };
+  };
+
+  var IntensityAnalyzer = function () {
+    var max;
+
+    var analyze = function(points) {
+      var i;
+      var frame_intensities = [];
+      for(i = 0; i < points.length; ++i) {
+        if(points[i].get_status() === 0) {
+          continue;
+        }
+        var frames_is = [];
+        var frame_num = 0;
+        var prev = points[i].get_last_point();
+        var curr = points[i].get_frame_point(frame_num);
+        while(curr !== null) {
+          frames_is[frame_num] = Math.sqrt(Math.pow(curr.y - prev.y, 2) + Math.pow(curr.x - prev.x, 2));
+          frame_num++;
+          prev = curr;
+          curr = points[i].get_frame_point(frame_num);
+        }
+        frame_intensities.push(frames_is);
+      }
+      var cmd = new CommandArray();
+      var max = 0;
+      var avg = 0;
+      var avgs = [];
+      var c, j;
+      for(i = 0; i < frame_intensities[0].length; ++i) {
+        c = 0;
+        for(j = 0; j < frame_intensities.length; ++j) {
+          c += frame_intensities[j][i];
+        }
+        avg = c / frame_intensities.length;
+        if (avg > max) max = avg;
+        avgs.push(avg);
+      }
+      var final_avg = [];
+      for(i = 0; i < avgs.length; ++i) {
+        final_avg.push(avgs[i]/max);
+      }
+      return final_avg;
+    };
+    return {
+      analyze: analyze
+    };
+  };
+
+  var JigglyOutput = function () {
+    Jiggly.setOutputMethod(Jiggly.outputMethods.HTML5AUDIO);
+    //Jiggly.setOutputMethod(Jiggly.outputMethods.WEBVIBRATION);
+    var output = function(n) {
+      Jiggly.runSpeed(255 * n, 1000);
+    };
+    return {
+      output: output
     };
   };
 
@@ -74,6 +148,7 @@ $(document).ready(function() {
       prev_xy = new Float32Array(points.length*2);
       curr_xy = new Float32Array(points.length*2);
       for (i = 0; i < points.length; ++i) {
+        points[i].clear_history();
         curr_xy[i*2] = points[i].get_frame_point(0).x;
         curr_xy[(i*2)+1] = points[i].get_frame_point(0).y;
       }
@@ -168,6 +243,8 @@ $(document).ready(function() {
     var canvas;
     var ctx;
     var overidx = -1;
+    var output = null;
+    var jig = new JigglyOutput();
 
     function on_point_list_click(e) {
       var targ;
@@ -282,6 +359,9 @@ $(document).ready(function() {
           }
         }
       }
+      if(output !== null && sprite.get_playing()) {
+        jig.output(output[cur_frame]);
+      }
     };
     document.addEventListener('gifmove', drawPoints, false);
 
@@ -303,6 +383,7 @@ $(document).ready(function() {
         document.getElementById("stop").style.color = "black";
         document.getElementById("pause").style.color = "red";
         sprite.pause();
+        jig.output(0);
       });
       document.getElementById("stop").addEventListener("click", function() {
         document.getElementById("play").style.color = "black";
@@ -310,6 +391,7 @@ $(document).ready(function() {
         document.getElementById("pause").style.color = "black";
         sprite.pause();
         sprite.move_to(0);
+        jig.output(0);
       });
       document.getElementById("backward").addEventListener("click", function() {
         sprite.pause();
@@ -332,6 +414,8 @@ $(document).ready(function() {
         var o = new OpticalFlowAnalyzer();
         document.removeEventListener('gifmove', drawPoints, false);
         o.analyze(sprite, points);
+        var a = new IntensityAnalyzer();
+        output = a.analyze(points);
         rebuild_point_list();
         document.addEventListener('gifmove', drawPoints, false);
         sprite.move_to(0);
@@ -342,6 +426,7 @@ $(document).ready(function() {
           document.getElementById("play").style.color = "black";
           document.getElementById("stop").style.color = "red";
           document.getElementById("pause").style.color = "black";
+          jig.output(0);
         }
       }
       document.addEventListener('gifloop', updateControls, false);
