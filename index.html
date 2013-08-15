@@ -10,17 +10,24 @@
     <script type="text/javascript" src="howler.js"></script>
     <script type="text/javascript" src="jiggly.js"></script>
     <script type="text/javascript" src="app.js"></script>
-    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet">
-      <title>FeelGIF</title>
+		<script type="text/javascript" src="jquery.jqplot.min.js"></script>
+		<script type="text/javascript" src="jqplot.highlighter.min.js"></script>
+		<script type="text/javascript" src="jqplot.dragable.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="jquery.jqplot.css" />
+		<link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+    <title>FeelGIF</title>
     </head>
     <body>
       <div id="fileinput">
-	URL: <input id="gifurl" value="test.gif" type="text" />
+	Local URL: <input id="gifurl" value="test.gif" type="text" />
+	Remote URL: <input id="gifremoteurl" type="text" />
 	Or File: <input id="giffile" type="file" />
 	<input id="gifsubmit" value="submit" type="submit" />
-	<div><a onclick="gifurl.value = 'test.gif';">furry porn</a></div>
-	<div><a onclick="gifurl.value = 'test3.gif';">blowjob</a></div>
-	<div><a onclick="gifurl.value = 'test2.gif';">weird bouncing ball</a></div>
+	<p>Defaults:</p>
+	<div><a id="furryporn">furry porn (2mb)</a></div>
+	<div><a id="bigfurryporn">furry porn stress test (7mb)</a></div>
+	<div><a id="blowjob">blowjob (400k)</a></div>
+	<div><a id="weird">weird bouncing ball (60k)</a></div>
       </div>
       <div id="preprocessing">
 	<a id="newfile"><i class="icon-circle-arrow-left"></i> Open a new file</a>
@@ -54,7 +61,11 @@
 	    <ul>
 	      <li id="analyze"><i class="icon-arrow-right"></i></li>
 	    </ul>
+	    <ul>
+	      <li id="sound"><i class="icon-bell-alt"></i></li>
+	    </ul>
 	  </div>
+		<div id="chartdiv" style="height:200px;width:600px;clear:both; "></div>
 	</div>
       </div>
       <div id="postprocessing">

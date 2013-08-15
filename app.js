@@ -107,10 +107,11 @@ $(document).ready(function() {
     Jiggly.setOutputMethod(Jiggly.outputMethods.HTML5AUDIO);
     //Jiggly.setOutputMethod(Jiggly.outputMethods.WEBVIBRATION);
     var output = function(n) {
-      Jiggly.runSpeed(255 * n, 1000);
+      Jiggly.runSpeed(75 * n, 1000);
     };
     return {
-      output: output
+      output: output,
+      mute: function(b) { Jiggly.mute(b); }
     };
   };
 
@@ -247,6 +248,7 @@ $(document).ready(function() {
     var ctx;
     var overidx = -1;
     var output = null;
+    var muted = true;
     var jig = new JigglyOutput();
 
     function on_point_list_click(e) {
@@ -423,6 +425,72 @@ $(document).ready(function() {
         document.addEventListener('gifmove', drawPoints, false);
         sprite.move_to(0);
         drawPoints();
+        var z = (function() {
+          var ar = [];
+          for (var i = 0; i < output.length; ++i) {
+            ar.push([i, output[i]]);
+          }
+          return ar;
+        })();
+        $.jqplot.config.enablePlugins = true;
+        var plot = $.jqplot('chartdiv', [z],
+                 {
+                   // Series options are specified as an array of objects, one object
+                   // for each series.
+                   series:[
+                     {
+                       // Change our line width and use a diamond shaped marker.
+                       lineWidth:2,
+                       markerOptions: { style:'diamond' },
+                       dragable: {
+                         color: '#FF0000',
+                         constrainTo: 'y'
+                       }
+                     }
+                   ],
+                   axesDefaults: {
+                     pad: 0,
+                     tickOptions: {
+                       showGridline: false,
+                     }
+                   },
+                   axes: {
+                     xaxis: {
+                       numberTicks: z.length
+                     }
+                   },
+                   highlighter: {
+                     show: true,
+                     sizeAdjust: 7.5
+                   },
+                   cursor: {
+                     show: false
+                   }
+                 });
+
+        //http://jsfiddle.net/Boro/5QA8r/
+        function DoSomeThing() {
+          // *** highlight point in plot ***
+          //console.log(" sth "+ plot.series[0].data[1][1]);
+          var seriesIndex = 0; //0 as we have just one series
+          var data = plot.series[seriesIndex].data;
+          var pointIndex = sprite.get_current_frame();
+          var x = plot.axes.xaxis.series_u2p(data[pointIndex][0]);
+          var y = plot.axes.yaxis.series_u2p(data[pointIndex][1]);
+          console.log("x= " + x + "  y= " + y);
+          var r = 5;
+          var drawingCanvas = $(".jqplot-highlight-canvas")[0]; //$(".jqplot-series-canvas")[0];
+          var context = drawingCanvas.getContext('2d');
+          context.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height); //plot.replot();
+          context.strokeStyle = "#000000";
+          context.fillStyle = "#FF00FF";
+          context.beginPath();
+          context.arc(x, y, r, 0, Math.PI * 2, true);
+          context.closePath();
+          context.stroke();
+          context.fill();
+        }
+        document.addEventListener('gifmove', DoSomeThing, false);
       });
       function updateControls(event) {
         if(!sprite.get_looping()) {
@@ -435,17 +503,12 @@ $(document).ready(function() {
       document.addEventListener('gifloop', updateControls, false);
     };
 
-    document.getElementById("gifsubmit").addEventListener('click', (function() {
+    var loadapp = function(src) {
       var drawdiv = document.getElementById("pregifcanvas");
       var src;
       sprite = new SpriteCanvas({ auto_play: false, rubbable: false });
       sprite.init();
       var loader = new GifLoader(sprite.get_loader());
-      if(document.getElementById("giffile").value != "") {
-        src = document.getElementById("giffile").value;
-      } else {
-        src = document.getElementById("gifurl").value;
-      }
       loader.load(src);
       canvas = sprite.get_canvas();
       ctx = canvas.getContext("2d");
@@ -455,6 +518,46 @@ $(document).ready(function() {
       canvas.addEventListener('click', on_canvas_click, false);
       document.getElementById("fileinput").style.display = "none";
       document.getElementById("preprocessing").style.display = "block";
+    };
+
+    document.getElementById("furryporn").addEventListener('click', (function() {
+      loadapp("test.gif");
+    }));
+
+    document.getElementById("sound").addEventListener('click', (function() {
+      if(muted) {
+        jig.mute(false);
+        document.getElementById("sound").style.color = "red";
+        muted = false;
+      } else {
+        jig.mute(true);
+        document.getElementById("sound").style.color = "black";
+        muted = true;
+      }
+    }));
+
+    document.getElementById("bigfurryporn").addEventListener('click', (function() {
+      loadapp("test4.gif");
+    }));
+
+    document.getElementById("blowjob").addEventListener('click', (function() {
+      loadapp("test3.gif");
+    }));
+
+    document.getElementById("weird").addEventListener('click', (function() {
+      loadapp("test2.gif");
+    }));
+
+    document.getElementById("gifsubmit").addEventListener('click', (function() {
+      var src;
+      if(document.getElementById("giffile").value != "") {
+        src = document.getElementById("giffile").value.replace("C:\\fakepath\\", "");
+      } else if (document.getElementById("gifremoteurl").value != "") {
+        src = "http://distro.nonpolynomial.com/files/feelgif/proxy.php?requrl=" + document.getElementById("gifremoteurl").value;
+      } else {
+        src = document.getElementById("gifurl").value;
+      }
+      loadapp(src);
     }));
   });
 
