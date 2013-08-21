@@ -1,5 +1,4 @@
 #pregif {
-    float: left;
 }
 
 #pregifcanvas {
@@ -7,8 +6,6 @@
 }
 
 #preoptions {
-    float: left;
-    margin-left: 5px;
 }
 
 #postgif {
@@ -76,4 +73,12 @@ li {
 
 #postprocessing {
     display: none;
+}
+
+.appdiv {
+    width: 650px;
+    margin: 0 auto;
+}
+
+#apppanel {
 }

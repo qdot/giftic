@@ -1,100 +1,123 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
-    <link rel="stylesheet" href="style.css" type="text/css" media="screen" />
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    <script src="jquery-2.0.3.min.js" ></script>
-    <script type="text/javascript" src="gifloader.js"></script>
-    <script type="text/javascript" src="spritecanvas.js"></script>
-    <script type="text/javascript" src="jsfeat.js"></script>
-    <script type="text/javascript" src="howler.js"></script>
-    <script type="text/javascript" src="jiggly.js"></script>
-    <script type="text/javascript" src="app.js"></script>
-		<script type="text/javascript" src="jquery.jqplot.min.js"></script>
-		<script type="text/javascript" src="jqplot.highlighter.min.js"></script>
-		<script type="text/javascript" src="jqplot.dragable.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="jquery.jqplot.css" />
-		<link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+    <script type="text/javascript" src="extjs/jquery/jquery-2.0.3.min.js" ></script>
+    <script type="text/javascript" src="extjs/jsfeat/jsfeat.js"></script>
+    <script type="text/javascript" src="extjs/howler/howler.js"></script>
+    <script type="text/javascript" src="extjs/jiggly/jiggly.js"></script>
+    <script type="text/javascript" src="extjs/jqplot/jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="extjs/jqplot/jqplot.highlighter.min.js"></script>
+    <script type="text/javascript" src="extjs/jqplot/jqplot.dragable.min.js"></script>
+    <script type="text/javascript" src="extjs/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/gifloader.js"></script>
+    <script type="text/javascript" src="js/spritecanvas.js"></script>
+    <script type="text/javascript" src="js/app.js"></script>
+		<link rel="stylesheet" type="text/css" href="extjs/bootstrap/bootstrap.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="extjs/jqplot/jquery.jqplot.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
     <title>FeelGIF</title>
-    </head>
-    <body>
-      <div id="fileinput">
-	Local URL: <input id="gifurl" value="test.gif" type="text" />
-	Remote URL: <input id="gifremoteurl" type="text" />
-	Or File: <input id="giffile" type="file" />
-	<input id="gifsubmit" value="submit" type="submit" />
-	<p>Defaults:</p>
-	<div><a id="furryporn">furry porn (2mb)</a></div>
-	<div><a id="bigfurryporn">furry porn stress test (7mb)</a></div>
-	<div><a id="blowjob">blowjob (400k)</a></div>
-	<div><a id="weird">weird bouncing ball (60k)</a></div>
-      </div>
-      <div id="preprocessing">
-	<a id="newfile"><i class="icon-circle-arrow-left"></i> Open a new file</a>
+  </head>
+  <body>
+    <div class="container">
+      <div class="appdiv">
 	<div>
-	  <div id="pregif">
-	    <div id="pregifcanvas" class="gifdiv"></div>
-	  </div>
-	  <div id="preoptions">
-	    <ul>
-	      <li id="play"><i class="icon-play"></i></li>
-	      <li id="pause"><i class="icon-pause"></i></li>
-	      <li id="stop"><i class="icon-stop"></i></li>
-	      <li id="backward"><i class="icon-step-backward"></i></li>
-	      <li id="forward"><i class="icon-step-forward"></i></li>
-	      <li id="loopgif"><i class="icon-refresh"></i></li>
-	    </ul>
-	    <ul>
-	      <li><i class="icon-resize-horizontal"></i></li>
-	      <li><i class="icon-edit"></i></li>
-	    </ul>
-	    <ul>
-	      <li><i class="icon-tag"></i></li>
-	      <li><i class="icon-plus-sign-alt"></i></li>
-	      <li><i class="icon-minus-sign-alt"></i></li>
-	    </ul>
-	    <ul id="pointlist">
-	    </ul>
-	    <ul>
-	      <li><i class="icon-upload"></i></li>
-	    </ul>
-	    <ul>
-	      <li id="analyze"><i class="icon-arrow-right"></i></li>
-	    </ul>
-	    <ul>
-	      <li id="sound"><i class="icon-bell-alt"></i></li>
-	    </ul>
-	  </div>
+	  <ul class="nav nav-pills">
+	    <li id="select-button" class="active btn-sm"><a href="#">File Select</a></li>
+	    <li id="preview-button" class="disabled btn-sm"><a href="#">Preview</a></li>
+	    <li id="spoints-button" class="disabled btn-sm"><a href="#">Point Select</a></li>
+	    <li id="inspect-button" class="disabled btn-sm"><a href="#">Inspect/Output</a></li>
+	    <li id="export-button" class="disabled btn-sm"><a href="#">Export</a></li>
+	  </ul>
+	</div>
+	<div class="panel" id="apppanel">
+	  <div class="panel-body">
+	    <div id="fileinput">
+	      Local URL: <input id="gifurl" value="test.gif" type="text" />
+	      Remote URL: <input id="gifremoteurl" type="text" />
+	      Or File: <input id="giffile" type="file" />
+	      <input id="gifsubmit" value="submit" type="submit" />
+	      <p>Defaults:</p>
+	      <div><a id="furryporn">furry porn (2mb)</a></div>
+	      <div><a id="bigfurryporn">furry porn stress test (7mb)</a></div>
+	      <div><a id="blowjob">blowjob (400k)</a></div>
+	      <div><a id="weird">weird bouncing ball (60k)</a></div>
+	    </div>
+	    <div id="preprocessing">
+	      <div>
+		<div id="pregif">
+		  <div id="pregifcanvas" class="gifdiv"></div>
+		</div>
+		<div id="gifcontrols">
+		  <ul>
+		    <li id="play"><i class="icon-play"></i></li>
+		    <li id="pause"><i class="icon-pause"></i></li>
+		    <li id="stop"><i class="icon-stop"></i></li>
+		    <li id="backward"><i class="icon-step-backward"></i></li>
+		    <li id="forward"><i class="icon-step-forward"></i></li>
+		    <li id="loopgif"><i class="icon-refresh"></i></li>
+		  </ul>
+		</div>
+	      </div>
+		<div id="preoptions">
+		  <!--
+		  <ul>
+		    <li><i class="icon-resize-horizontal"></i></li>
+		    <li><i class="icon-edit"></i></li>
+		  </ul>
+		  <ul>
+		    <li><i class="icon-tag"></i></li>
+		    <li><i class="icon-plus-sign-alt"></i></li>
+		    <li><i class="icon-minus-sign-alt"></i></li>
+		  </ul>
+		  <ul id="pointlist">
+		  </ul>
+		  <ul>
+		    <li><i class="icon-upload"></i></li>
+		  </ul>
+		  <ul>
+		    <li id="analyze"><i class="icon-arrow-right"></i></li>
+		  </ul>
+		  <ul>
+		    <li id="sound"><i class="icon-bell-alt"></i></li>
+		  </ul>
+		</div>
+		-->
 		<div id="chartdiv" style="height:200px;width:600px;clear:both; "></div>
+		
+	    </div>
+	    <div id="postprocessing">
+	      <a id="newfile"><i class="icon-circle-arrow-left"></i> Open a new file</a> | <a id="processing"><i class="icon-circle-arrow-left"></i> Change processing options</a>
+	      <div>
+		<div id="postgif">
+		  <div id="postgifcanvas" class="gifdiv"></div>
+		</div>
+		<div id="postoptions">
+		  <ul>
+		    <li><i class="icon-play"></i></li>
+		    <li><i class="icon-pause"></i></li>
+		    <li><i class="icon-stop"></i></li>
+		    <li><i class="icon-step-backward"></i></li>
+		    <li><i class="icon-step-forward"></i></li>
+		  </ul>
+		  <ul>
+		    <li><i class="icon-tag"></i></li>
+		    <li><i class="icon-plus-sign-alt"></i></li>
+		    <li><i class="icon-minus-sign-alt"></i></li>
+		  </ul>
+		  <ul>
+		    <li><i class="icon-download"></i></li>
+		  </ul>
+		  <ul>
+		    <li><i class="icon-arrow-right"></i></li>
+		  </ul>
+		</div>
+	      </div>
+	    </div>
+	  </div>
 	</div>
       </div>
-      <div id="postprocessing">
-	<a id="newfile"><i class="icon-circle-arrow-left"></i> Open a new file</a> | <a id="processing"><i class="icon-circle-arrow-left"></i> Change processing options</a>
-	<div>
-	  <div id="postgif">
-	    <div id="postgifcanvas" class="gifdiv"></div>
-	  </div>
-	  <div id="postoptions">
-	    <ul>
-	      <li><i class="icon-play"></i></li>
-	      <li><i class="icon-pause"></i></li>
-	      <li><i class="icon-stop"></i></li>
-	      <li><i class="icon-step-backward"></i></li>
-	      <li><i class="icon-step-forward"></i></li>
-	    </ul>
-	    <ul>
-	      <li><i class="icon-tag"></i></li>
-	      <li><i class="icon-plus-sign-alt"></i></li>
-	      <li><i class="icon-minus-sign-alt"></i></li>
-	    </ul>
-	    <ul>
-	      <li><i class="icon-download"></i></li>
-	    </ul>
-	    <ul>
-	      <li><i class="icon-arrow-right"></i></li>
-	    </ul>
-	  </div>
-	</div>
-      </div>
-    </body>
-  </html>
+    </div>
+  </body>
+</html>

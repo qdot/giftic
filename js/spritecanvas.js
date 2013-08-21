@@ -1,3 +1,5 @@
+"use strict";
+
 var SpriteLoaderCallbacks = {
   onLoadInfo : "",
   onLoadFrame : "",
@@ -12,6 +14,10 @@ var SpriteCanvas = function ( options ) {
   var loadError;
   var forward = true;
   var ctx_scaled = false;
+  var canvas, ctx;
+  var success_callback = undefined;
+  var initialized = false;
+  var load_callback = false;
   var moveEvent = document.createEvent("Event");
   moveEvent.initEvent("gifmove",true,true);
   var loopEvent = document.createEvent("Event");
@@ -35,6 +41,9 @@ var SpriteCanvas = function ( options ) {
 
   var onLoadSuccess = function() {
     player.init();
+    if (success_callback) {
+      success_callback();
+    }
   };
 
   var onLoadProgress = function (pos, length, draw) {
@@ -245,10 +254,6 @@ var SpriteCanvas = function ( options ) {
     }
   };
 
-  var canvas, ctx;
-  var initialized = false;
-  var load_callback = false;
-
   return {
     // play controls
     play: player.play,
@@ -279,15 +284,14 @@ var SpriteCanvas = function ( options ) {
     get_current_frame: function() {
       return player.current_frame();
     },
-    get_loader: function() {
-      return {
-        onLoadInfo : onLoadInfo,
-        onLoadFrame : onLoadFrame,
-        onLoadError : onLoadError,
-        onLoadSuccess : onLoadSuccess,
-        onLoadProgress : onLoadProgress
-      };
-    }
+    set_success_callback: function(s) {
+      success_callback = s;
+    },
+    onLoadInfo : onLoadInfo,
+    onLoadFrame : onLoadFrame,
+    onLoadError : onLoadError,
+    onLoadSuccess : onLoadSuccess,
+    onLoadProgress : onLoadProgress
   };
 
 };
