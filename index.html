@@ -12,8 +12,10 @@
     <script type="text/javascript" src="extjs/bootstrap/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/gifloader.js"></script>
     <script type="text/javascript" src="js/spritecanvas.js"></script>
+    <script type="text/javascript" src="js/analyzers.js"></script>
+    <script type="text/javascript" src="js/outputs.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
-		<link rel="stylesheet" type="text/css" href="extjs/bootstrap/bootstrap.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="extjs/bootstrap/bootstrap.css" media="screen" />
     <link rel="stylesheet" type="text/css" href="extjs/jqplot/jquery.jqplot.css" />
     <link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
     <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
@@ -33,88 +35,44 @@
 	</div>
 	<div class="panel" id="apppanel">
 	  <div class="panel-body">
-	    <div id="fileinput">
-	      Local URL: <input id="gifurl" value="test.gif" type="text" />
-	      Remote URL: <input id="gifremoteurl" type="text" />
-	      Or File: <input id="giffile" type="file" />
-	      <input id="gifsubmit" value="submit" type="submit" />
-	      <p>Defaults:</p>
-	      <div><a id="furryporn">furry porn (2mb)</a></div>
-	      <div><a id="bigfurryporn">furry porn stress test (7mb)</a></div>
-	      <div><a id="blowjob">blowjob (400k)</a></div>
-	      <div><a id="weird">weird bouncing ball (60k)</a></div>
+	  </div>
+	  <div class="help-text">
+	  </div>
+	</div>
+	<div id="appelements">
+	  <div id="fileinput">
+	    Local URL: <input id="gifurl" value="test.gif" type="text" />
+	    Remote URL: <input id="gifremoteurl" type="text" />
+	    Or File: <input id="giffile" type="file" />
+	    <input id="gifsubmit" value="submit" type="submit" />
+	    <p>Defaults:</p>
+	    <div><a id="furryporn">furry porn (2mb)</a></div>
+	    <div><a id="bigfurryporn">furry porn stress test (7mb)</a></div>
+	    <div><a id="blowjob">blowjob (400k)</a></div>
+	    <div><a id="weird">weird bouncing ball (60k)</a></div>
+	  </div>
+	  <div id="fileinput-help">
+	    <p>Welcome to feelgif! Choose a file to begin.</p>
+	  </div>
+	  <div id="sprite">
+	    <div id="spritediv">
+	      <div id="spritecanvas" class="gifdiv"></div>
 	    </div>
-	    <div id="preprocessing">
-	      <div>
-		<div id="pregif">
-		  <div id="pregifcanvas" class="gifdiv"></div>
-		</div>
-		<div id="gifcontrols">
-		  <ul>
-		    <li id="play"><i class="icon-play"></i></li>
-		    <li id="pause"><i class="icon-pause"></i></li>
-		    <li id="stop"><i class="icon-stop"></i></li>
-		    <li id="backward"><i class="icon-step-backward"></i></li>
-		    <li id="forward"><i class="icon-step-forward"></i></li>
-		    <li id="loopgif"><i class="icon-refresh"></i></li>
-		  </ul>
-		</div>
-	      </div>
-		<div id="preoptions">
-		  <!--
-		  <ul>
-		    <li><i class="icon-resize-horizontal"></i></li>
-		    <li><i class="icon-edit"></i></li>
-		  </ul>
-		  <ul>
-		    <li><i class="icon-tag"></i></li>
-		    <li><i class="icon-plus-sign-alt"></i></li>
-		    <li><i class="icon-minus-sign-alt"></i></li>
-		  </ul>
-		  <ul id="pointlist">
-		  </ul>
-		  <ul>
-		    <li><i class="icon-upload"></i></li>
-		  </ul>
-		  <ul>
-		    <li id="analyze"><i class="icon-arrow-right"></i></li>
-		  </ul>
-		  <ul>
-		    <li id="sound"><i class="icon-bell-alt"></i></li>
-		  </ul>
-		</div>
-		-->
-		<div id="chartdiv" style="height:200px;width:600px;clear:both; "></div>
-		
+	    <div id="spritecontrols">
+	      <ul>
+		<li id="play"><i class="icon-play"></i></li>
+		<li id="pause"><i class="icon-pause"></i></li>
+		<li id="stop"><i class="icon-stop"></i></li>
+		<li id="backward"><i class="icon-step-backward"></i></li>
+		<li id="forward"><i class="icon-step-forward"></i></li>
+		<li id="loopgif"><i class="icon-refresh"></i></li>
+	      </ul>
 	    </div>
-	    <div id="postprocessing">
-	      <a id="newfile"><i class="icon-circle-arrow-left"></i> Open a new file</a> | <a id="processing"><i class="icon-circle-arrow-left"></i> Change processing options</a>
-	      <div>
-		<div id="postgif">
-		  <div id="postgifcanvas" class="gifdiv"></div>
-		</div>
-		<div id="postoptions">
-		  <ul>
-		    <li><i class="icon-play"></i></li>
-		    <li><i class="icon-pause"></i></li>
-		    <li><i class="icon-stop"></i></li>
-		    <li><i class="icon-step-backward"></i></li>
-		    <li><i class="icon-step-forward"></i></li>
-		  </ul>
-		  <ul>
-		    <li><i class="icon-tag"></i></li>
-		    <li><i class="icon-plus-sign-alt"></i></li>
-		    <li><i class="icon-minus-sign-alt"></i></li>
-		  </ul>
-		  <ul>
-		    <li><i class="icon-download"></i></li>
-		  </ul>
-		  <ul>
-		    <li><i class="icon-arrow-right"></i></li>
-		  </ul>
-		</div>
-	      </div>
-	    </div>
+	  </div>
+	  <div id="sprite-help">
+	    <p>Now that the file is loaded, you can play through it to
+	    make sure it's correct, or step through the frames to see
+	    details you may want to catch in the analysis step.</p>
 	  </div>
 	</div>
       </div>

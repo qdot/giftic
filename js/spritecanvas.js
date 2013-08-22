@@ -8,6 +8,64 @@ var SpriteLoaderCallbacks = {
   onLoadProgress : ""
 };
 
+var SpritePlayerControls = (function () {
+  var init = function() {
+    $("#stop").css("color", "red");
+    $("#play").css("color",  "black");
+    $("#pause").css("color",  "black");
+    $("#loopgif").css("color",  "black");
+
+    $("#play").click(function() {
+      $("#play").css("color",  "red");
+      $("#stop").css("color",  "black");
+      $("#pause").css("color",  "black");
+      sprite.play();
+    });
+    $("#pause").click(function() {
+      $("#play").css("color",  "black");
+      $("#stop").css("color",  "black");
+      $("#pause").css("color",  "red");
+      sprite.pause();
+    });
+    $("#stop").click(function() {
+      $("#play").css("color",  "black");
+      $("#stop").css("color",  "red");
+      $("#pause").css("color",  "black");
+      sprite.pause();
+      sprite.move_to(0);
+    });
+    $("#backward").click(function() {
+      sprite.pause();
+      sprite.move_relative(-1);
+    });
+    $("#forward").click(function() {
+      sprite.pause();
+      sprite.move_relative(1);
+    });
+    $("#loopgif").click(function() {
+      if(sprite.get_looping()) {
+        sprite.setloop(false);
+        $("#loopgif").css("color",  "black");
+      } else {
+        sprite.setloop(true);
+        $("#loopgif").css("color",  "red");
+      }
+    });
+    function updateControls(event) {
+      if(!sprite.get_looping()) {
+        $("#play").style.color = "black";
+        $("#stop").style.color = "red";
+        $("#pause").style.color = "black";
+        jig.output(0);
+      }
+    }
+    document.addEventListener('gifloop', updateControls, false);
+  };
+  return {
+    init : init
+  };
+});
+
 var SpriteCanvas = function ( options ) {
   var playing = true;
   var loop = true;
@@ -18,6 +76,7 @@ var SpriteCanvas = function ( options ) {
   var success_callback = undefined;
   var initialized = false;
   var load_callback = false;
+  var controls = SpritePlayerControls();
   var moveEvent = document.createEvent("Event");
   moveEvent.initEvent("gifmove",true,true);
   var loopEvent = document.createEvent("Event");
@@ -236,10 +295,63 @@ var SpriteCanvas = function ( options ) {
     canvas.addEventListener((cantouch) ? 'touchmove' : 'mousemove', moveprogress);
   };
 
+  var init_controls = function() {
+    $("#stop").css("color", "red");
+    $("#play").css("color",  "black");
+    $("#pause").css("color",  "black");
+    $("#loopgif").css("color",  "black");
+
+    $("#play").click(function() {
+      $("#play").css("color",  "red");
+      $("#stop").css("color",  "black");
+      $("#pause").css("color",  "black");
+      player.play();
+    });
+    $("#pause").click(function() {
+      $("#play").css("color",  "black");
+      $("#stop").css("color",  "black");
+      $("#pause").css("color",  "red");
+      player.pause();
+    });
+    $("#stop").click(function() {
+      $("#play").css("color",  "black");
+      $("#stop").css("color",  "red");
+      $("#pause").css("color",  "black");
+      player.pause();
+      player.move_to(0);
+    });
+    $("#backward").click(function() {
+      player.pause();
+      player.move_relative(-1);
+    });
+    $("#forward").click(function() {
+      player.pause();
+      player.move_relative(1);
+    });
+    $("#loopgif").click(function() {
+      if(loop) {
+        loop = false;
+        $("#loopgif").css("color",  "black");
+      } else {
+        loop = true;
+        $("#loopgif").css("color",  "red");
+      }
+    });
+    function updateControls(event) {
+      if(loop) {
+        $("#play").style.color = "black";
+        $("#stop").style.color = "red";
+        $("#pause").style.color = "black";
+      }
+    }
+    document.addEventListener('gifloop', updateControls, false);
+  };
+
   var init = function () {
     if (initialized) return;
     canvas = document.createElement('canvas');
     ctx = canvas.getContext('2d');
+    init_controls();
     initialized = true;
   };
 
