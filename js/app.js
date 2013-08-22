@@ -20,7 +20,7 @@ $(document).ready(function() {
       }
       mode = m;
       var e;
-      $('.panel-body').children().each(function(i) {
+      $('.apppanel').children().each(function(i) {
         e = $(this).detach();
         $('#appelements').append(e);
       });
@@ -38,7 +38,7 @@ $(document).ready(function() {
       case "file":
         $("#select-button").addClass('active');
         e = $("#fileinput").detach();
-        $('.panel-body').append(e);
+        $('.apppanel').append(e);
         e = $("#fileinput-help").detach();
         $('.help-text').append(e);
         break;
@@ -47,7 +47,7 @@ $(document).ready(function() {
         $("#preview-button").removeClass('disabled');
         $("#spoints-button").removeClass('disabled');
         e = $("#sprite").detach();
-        $('.panel-body').append(e);
+        $('.apppanel').append(e);
         e = $("#sprite-help").detach();
         $('.help-text').append(e);
         break;
@@ -261,7 +261,6 @@ $(document).ready(function() {
       // });
 
     var loadapp = function(src) {
-      var drawdiv = $("#spritecanvas");
       sprite = new SpriteCanvas({ auto_play: false, rubbable: false });
       sprite.init();
       var loader = new GifLoader(sprite);
@@ -269,13 +268,11 @@ $(document).ready(function() {
       canvas = sprite.get_canvas();
       ctx = canvas.getContext("2d");
       sprite.setloop(false);
+      $("#spritecanvas").empty();
       $("#spritecanvas").append(sprite.get_canvas());
       sprite.set_success_callback(function() {
         canvas.addEventListener('click', on_canvas_click, false);
         $(window).resize();
-        $("#apppanel").css({
-          height: sprite.get_canvas().height + 35
-        });
       });
       switch_mode("preview");
     };
