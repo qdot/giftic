@@ -49,3 +49,14 @@ li {
     width: 650px;
     margin: 0 auto;
 }
+
+.help-text {
+    padding: 0;
+    margin: 0;
+    font-size: 10pt;
+}
+
+.help-text p {
+    padding: 0;
+    margin: 0;
+}

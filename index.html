@@ -24,24 +24,28 @@
   <body>
     <div class="container">
       <div class="appdiv">
-	<div>
-	  <ul class="nav nav-pills">
-	    <li id="select-button" class="active btn-sm"><a href="#">File Select</a></li>
-	    <li id="preview-button" class="disabled btn-sm"><a href="#">Preview</a></li>
-	    <li id="spoints-button" class="disabled btn-sm"><a href="#">Point Select</a></li>
-	    <li id="inspect-button" class="disabled btn-sm"><a href="#">Inspect/Output</a></li>
-	    <li id="export-button" class="disabled btn-sm"><a href="#">Export</a></li>
-	  </ul>
-	</div>
-	<div class="panel">
-	  <div class="panel-body">
-	    <div class="apppanel">
-	    </div>
+	<div class="navigation">
+	  <div>
+	    <ul class="nav nav-pills">
+	      <li id="select-button" class="active btn-sm"><a href="#">File Select</a></li>
+	      <li id="preview-button" class="disabled btn-sm"><a href="#">Preview</a></li>
+	      <li id="spoints-button" class="disabled btn-sm"><a href="#">Point Select</a></li>
+	      <li id="inspect-button" class="disabled btn-sm"><a href="#">Inspect/Output</a></li>
+	      <li id="export-button" class="disabled btn-sm"><a href="#">Export</a></li>
+	    </ul>
 	  </div>
 	</div>
-	<div class="panel">
-	  <div class="panel-body">
-	    <div class="help-text">
+	<div class="application">
+	  <div class="panel">
+	    <div class="panel-body">
+	      <div class="apppanel">
+	      </div>
+	    </div>
+	  </div>
+	  <div class="panel">
+	    <div class="panel-body">
+	      <div class="help-text">
+	      </div>
 	    </div>
 	  </div>
 	</div>
@@ -58,7 +62,9 @@
 	    <div><a id="weird">weird bouncing ball (60k)</a></div>
 	  </div>
 	  <div id="fileinput-help">
-	    <p>Welcome to feelgif! Choose a file to begin.</p>
+	    <p>Welcome to feelgif! To begin, enter the URL of an
+	    animated gif file, or choose a file on your local
+	    computer.</p>
 	  </div>
 	  <div id="sprite">
 	    <div id="spritediv">

@@ -272,7 +272,7 @@ $(document).ready(function() {
       $("#spritecanvas").append(sprite.get_canvas());
       sprite.set_success_callback(function() {
         canvas.addEventListener('click', on_canvas_click, false);
-        $(window).resize();
+        //$(window).resize();
       });
       switch_mode("preview");
     };
@@ -307,12 +307,12 @@ $(document).ready(function() {
 
     $("#gifsubmit").click(function() {
       var src;
-      if($("#giffile").value != "") {
-        src = $("#giffile").value.replace("C:\\fakepath\\", "");
-      } else if ($("#gifremoteurl").value != "") {
-        src = "http://distro.nonpolynomial.com/files/feelgif/proxy.php?requrl=" + $("#gifremoteurl").value;
+      if($("#giffile").val() != "") {
+        src = $("#giffile").val().replace("C:\\fakepath\\", "");
+      } else if ($("#gifremoteurl").val() != "") {
+        src = "http://distro.nonpolynomial.com/files/feelgif/proxy.php?requrl=" + $("#gifremoteurl").val();
       } else {
-        src = $("#gifurl").value;
+        src = $("#gifurl").val();
       }
       loadapp(src);
     });
@@ -339,5 +339,5 @@ $(document).ready(function() {
   });
 
   // To initially run the function:
-  $(window).resize();
+  //$(window).resize();
 });
