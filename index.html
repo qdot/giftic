@@ -19,7 +19,7 @@
     <link rel="stylesheet" type="text/css" href="extjs/jqplot/jquery.jqplot.css" />
     <link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
     <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
-    <title>FeelGIF</title>
+    <title>giftic</title>
   </head>
   <body>
     <div class="container">
@@ -62,7 +62,7 @@
 	    <div><a id="weird">weird bouncing ball (60k)</a></div>
 	  </div>
 	  <div id="fileinput-help">
-	    <p>Welcome to feelgif! To begin, enter the URL of an
+	    <p>Welcome to giftic! To begin, enter the URL of an
 	    animated gif file, or choose a file on your local
 	    computer.</p>
 	  </div>
@@ -85,7 +85,27 @@
 	    <p>Now that the file is loaded, you can play through it to
 	    make sure it's correct, or step through the frames to see
 	    details you may want to catch in the analysis step.</p>
+	    <p>When ready to select points, clikc the "Point Select"
+	    button above.</p>
 	  </div>
+	  <div id="select-help">
+	    <p>Click points on the image where you would like to
+	    track motion. The set of points should have matching
+	    motion, otherwise the output won't work correctly.</p>
+	    <p>Once you're finished selecting points, click on the
+	    "Inspect/Output" button above to continue.</p>
+	  </div>
+	  <div id="inspect-help">
+	    <p>The color of the points denotes whether or not motion
+	    analysis was successful. Green points were tracked all the
+	    way through the animation, while red points failed to be
+	    tracked until the end.</p>
+	    <p>The motion of the green points is averaged per frame,
+	    creating the graph you see below the image now. Hitting
+	    play on the image will show you the average motion per
+	    frame, as well as the motiong of tracking points.</p>
+	  </div>
+	  <div id="chartdiv" style="height:200px;width:600px;clear:both; "></div>
 	</div>
       </div>
     </div>

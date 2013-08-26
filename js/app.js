@@ -2,7 +2,7 @@
 
 $(document).ready(function() {
 
-  var FeelGIF = (function () {
+  var giftic = (function () {
 
     var sprite;
     var points = [];
@@ -46,17 +46,34 @@ $(document).ready(function() {
         $("#preview-button").addClass('active');
         $("#preview-button").removeClass('disabled');
         $("#spoints-button").removeClass('disabled');
+        $("#inspect-button").removeClass('disabled');
         e = $("#sprite").detach();
         $('.apppanel').append(e);
         e = $("#sprite-help").detach();
         $('.help-text').append(e);
+        canvas.removeEventListener('click', on_canvas_click, false);
         break;
       case "select":
+        $("#spoints-button").addClass('active');
+        e = $("#sprite").detach();
+        $('.apppanel').append(e);
+        e = $("#select-help").detach();
+        $('.help-text').append(e);
+        canvas.addEventListener('click', on_canvas_click, false);
         break;
       case "output":
-        $("#export-button").removeClass('disabled');
+        $("#inspect-button").addClass('active');
+        //$("#export-button").removeClass('disabled');
+        e = $("#sprite").detach();
+        $('.apppanel').append(e);
+        e = $("#chartdiv").detach();
+        $('.apppanel').append(e);
+        e = $("#inspect-help").detach();
+        $('.help-text').append(e);
+        run_analysis();
         break;
       case "export":
+        $("#export-button").addClass('active');
         break;
       default:
         break;
@@ -69,7 +86,7 @@ $(document).ready(function() {
       else if (e.srcElement) targ = e.srcElement;
       var id = targ.getAttribute("rel:index");
       points.splice(id, 1);
-      rebuild_point_list();
+      //rebuild_point_list();
       sprite.move_to(sprite.get_current_frame());
     }
 
@@ -121,7 +138,7 @@ $(document).ready(function() {
       if(coords.x > 0 & coords.y > 0 & coords.x < canvas.width & coords.y < canvas.height) {
         points.push(new PointFrameArray(coords.x, coords.y));
         draw_circle(coords.x, coords.y, 2);
-        rebuild_point_list();
+        //rebuild_point_list();
       }
     }
 
@@ -182,83 +199,83 @@ $(document).ready(function() {
     };
     document.addEventListener('gifmove', drawPoints, false);
 
-      // $("#analyze").click(function() {
-      //   var o = new OpticalFlowAnalyzer();
-      //   document.removeEventListener('gifmove', drawPoints, false);
-      //   o.analyze(sprite, points);
-      //   var a = new IntensityAnalyzer();
-      //   output = a.analyze(points);
-      //   rebuild_point_list();
-      //   document.addEventListener('gifmove', drawPoints, false);
-      //   sprite.move_to(0);
-      //   drawPoints();
-      //   var z = (function() {
-      //     var ar = [];
-      //     for (var i = 0; i < output.length; ++i) {
-      //       ar.push([i, output[i]]);
-      //     }
-      //     return ar;
-      //   })();
-      //   $.jqplot.config.enablePlugins = true;
-      //   var plot = $.jqplot('chartdiv', [z],
-      //                       {
-      //                         // Series options are specified as an array of objects, one object
-      //                         // for each series.
-      //                         series:[
-      //                           {
-      //                             // Change our line width and use a diamond shaped marker.
-      //                             lineWidth:2,
-      //                             markerOptions: { style:'diamond' },
-      //                             dragable: {
-      //                               color: '#FF0000',
-      //                               constrainTo: 'y'
-      //                             }
-      //                           }
-      //                         ],
-      //                         axesDefaults: {
-      //                           pad: 0,
-      //                           tickOptions: {
-      //                             showGridline: false,
-      //                           }
-      //                         },
-      //                         axes: {
-      //                           xaxis: {
-      //                             numberTicks: z.length
-      //                           }
-      //                         },
-      //                         highlighter: {
-      //                           show: true,
-      //                           sizeAdjust: 7.5
-      //                         },
-      //                         cursor: {
-      //                           show: false
-      //                         }
-      //                       });
+    var run_analysis = function() {
+      var o = new OpticalFlowAnalyzer();
+      document.removeEventListener('gifmove', drawPoints, false);
+      o.analyze(sprite, points);
+      var a = new IntensityAnalyzer();
+      output = a.analyze(points);
+      //rebuild_point_list();
+      document.addEventListener('gifmove', drawPoints, false);
+      sprite.move_to(0);
+      drawPoints();
+      var z = (function() {
+        var ar = [];
+        for (var i = 0; i < output.length; ++i) {
+          ar.push([i, output[i]]);
+        }
+        return ar;
+      })();
+      $.jqplot.config.enablePlugins = true;
+      var plot = $.jqplot('chartdiv', [z],
+                          {
+                            // Series options are specified as an array of objects, one object
+                            // for each series.
+                            series:[
+                              {
+                                // Change our line width and use a diamond shaped marker.
+                                lineWidth:2,
+                                markerOptions: { style:'diamond' },
+                                dragable: {
+                                  color: '#FF0000',
+                                  constrainTo: 'y'
+                                }
+                              }
+                            ],
+                            axesDefaults: {
+                              pad: 0,
+                              tickOptions: {
+                                showGridline: false,
+                              }
+                            },
+                            axes: {
+                              xaxis: {
+                                numberTicks: z.length
+                              }
+                            },
+                            highlighter: {
+                              show: true,
+                              sizeAdjust: 7.5
+                            },
+                            cursor: {
+                              show: false
+                            }
+                          });
 
-      //   //http://jsfiddle.net/Boro/5QA8r/
-      //   function DoSomeThing() {
-      //     // *** highlight point in plot ***
-      //     //console.log(" sth "+ plot.series[0].data[1][1]);
-      //     var seriesIndex = 0; //0 as we have just one series
-      //     var data = plot.series[seriesIndex].data;
-      //     var pointIndex = sprite.get_current_frame();
-      //     var x = plot.axes.xaxis.series_u2p(data[pointIndex][0]);
-      //     var y = plot.axes.yaxis.series_u2p(data[pointIndex][1]);
-      //     console.log("x= " + x + "  y= " + y);
-      //     var r = 5;
-      //     var drawingCanvas = $(".jqplot-highlight-canvas")[0]; //$(".jqplot-series-canvas")[0];
-      //     var context = drawingCanvas.getContext('2d');
-      //     context.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height); //plot.replot();
-      //     context.strokeStyle = "#000000";
-      //     context.fillStyle = "#FF00FF";
-      //     context.beginPath();
-      //     context.arc(x, y, r, 0, Math.PI * 2, true);
-      //     context.closePath();
-      //     context.stroke();
-      //     context.fill();
-      //   }
-      //   document.addEventListener('gifmove', DoSomeThing, false);
-      // });
+      //http://jsfiddle.net/Boro/5QA8r/
+      function DoSomeThing() {
+        // *** highlight point in plot ***
+        //console.log(" sth "+ plot.series[0].data[1][1]);
+        var seriesIndex = 0; //0 as we have just one series
+        var data = plot.series[seriesIndex].data;
+        var pointIndex = sprite.get_current_frame();
+        var x = plot.axes.xaxis.series_u2p(data[pointIndex][0]);
+        var y = plot.axes.yaxis.series_u2p(data[pointIndex][1]);
+        console.log("x= " + x + "  y= " + y);
+        var r = 5;
+        var drawingCanvas = $(".jqplot-highlight-canvas")[0]; //$(".jqplot-series-canvas")[0];
+        var context = drawingCanvas.getContext('2d');
+        context.clearRect(0, 0, drawingCanvas.width, drawingCanvas.height); //plot.replot();
+        context.strokeStyle = "#000000";
+        context.fillStyle = "#FF00FF";
+        context.beginPath();
+        context.arc(x, y, r, 0, Math.PI * 2, true);
+        context.closePath();
+        context.stroke();
+        context.fill();
+      }
+      document.addEventListener('gifmove', DoSomeThing, false);
+    };
 
     var loadapp = function(src) {
       sprite = new SpriteCanvas({ auto_play: false, rubbable: false });
@@ -270,10 +287,6 @@ $(document).ready(function() {
       sprite.setloop(false);
       $("#spritecanvas").empty();
       $("#spritecanvas").append(sprite.get_canvas());
-      sprite.set_success_callback(function() {
-        canvas.addEventListener('click', on_canvas_click, false);
-        //$(window).resize();
-      });
       switch_mode("preview");
     };
 
@@ -310,7 +323,7 @@ $(document).ready(function() {
       if($("#giffile").val() != "") {
         src = $("#giffile").val().replace("C:\\fakepath\\", "");
       } else if ($("#gifremoteurl").val() != "") {
-        src = "http://distro.nonpolynomial.com/files/feelgif/proxy.php?requrl=" + $("#gifremoteurl").val();
+        src = "http://distro.nonpolynomial.com/files/giftic/proxy.php?requrl=" + $("#gifremoteurl").val();
       } else {
         src = $("#gifurl").val();
       }
@@ -318,25 +331,47 @@ $(document).ready(function() {
     });
 
     $("#select-button").click(function() {
-      switch_mode("file");
+      if(!$("#select-button").hasClass("disabled")) {
+        switch_mode("file");
+      }
     });
 
     $("#preview-button").click(function() {
-      switch_mode("preview");
+      if(!$("#preview-button").hasClass("disabled")) {
+        switch_mode("preview");
+      }
+    });
+
+    $("#spoints-button").click(function() {
+      if(!$("#spoints-button").hasClass("disabled")) {
+        switch_mode("select");
+      }
+    });
+
+    $("#inspect-button").click(function() {
+      if(!$("#inspect-button").hasClass("disabled")) {
+        switch_mode("output");
+      }
+    });
+
+    $("#export-button").click(function() {
+      if(!$("#inspect-button").hasClass("disabled")) {
+        switch_mode("export");
+      }
     });
 
     switch_mode("file");
   });
 
-  FeelGIF();
+  giftic();
 
-  $(window).resize(function(){
-    $('.appdiv').css({
-      position:'absolute',
-      left: ($(window).width() - $('.appdiv').outerWidth())/2,
-      top: ($(window).height() - $('.appdiv').outerHeight())/2
-    });
-  });
+  // $(window).resize(function(){
+  //   $('.appdiv').css({
+  //     position:'absolute',
+  //     left: ($(window).width() - $('.appdiv').outerWidth())/2,
+  //     top: ($(window).height() - $('.appdiv').outerHeight())/2
+  //   });
+  // });
 
   // To initially run the function:
   //$(window).resize();
