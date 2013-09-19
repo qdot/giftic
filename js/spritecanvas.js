@@ -1,72 +1,72 @@
-"use strict";
+'use strict';
 
 var SpriteLoaderCallbacks = {
-  onLoadInfo : "",
-  onLoadFrame : "",
-  onLoadError : "",
-  onLoadSuccess : "",
-  onLoadProgress : ""
+  onLoadInfo: '',
+  onLoadFrame: '',
+  onLoadError: '',
+  onLoadSuccess: '',
+  onLoadProgress: ''
 };
 
-var SpritePlayerControls = (function () {
+var SpritePlayerControls = (function() {
   var init = function() {
-    $("#stop").css("color", "red");
-    $("#play").css("color",  "black");
-    $("#pause").css("color",  "black");
-    $("#loopgif").css("color",  "black");
+    $('#stop').css('color', 'red');
+    $('#play').css('color', 'black');
+    $('#pause').css('color', 'black');
+    $('#loopgif').css('color', 'black');
 
-    $("#play").click(function() {
-      $("#play").css("color",  "red");
-      $("#stop").css("color",  "black");
-      $("#pause").css("color",  "black");
+    $('#play').click(function() {
+      $('#play').css('color', 'red');
+      $('#stop').css('color', 'black');
+      $('#pause').css('color', 'black');
       sprite.play();
     });
-    $("#pause").click(function() {
-      $("#play").css("color",  "black");
-      $("#stop").css("color",  "black");
-      $("#pause").css("color",  "red");
+    $('#pause').click(function() {
+      $('#play').css('color', 'black');
+      $('#stop').css('color', 'black');
+      $('#pause').css('color', 'red');
       sprite.pause();
     });
-    $("#stop").click(function() {
-      $("#play").css("color",  "black");
-      $("#stop").css("color",  "red");
-      $("#pause").css("color",  "black");
+    $('#stop').click(function() {
+      $('#play').css('color', 'black');
+      $('#stop').css('color', 'red');
+      $('#pause').css('color', 'black');
       sprite.pause();
       sprite.move_to(0);
     });
-    $("#backward").click(function() {
+    $('#backward').click(function() {
       sprite.pause();
       sprite.move_relative(-1);
     });
-    $("#forward").click(function() {
+    $('#forward').click(function() {
       sprite.pause();
       sprite.move_relative(1);
     });
-    $("#loopgif").click(function() {
-      if(sprite.get_looping()) {
+    $('#loopgif').click(function() {
+      if (sprite.get_looping()) {
         sprite.setloop(false);
-        $("#loopgif").css("color",  "black");
+        $('#loopgif').css('color', 'black');
       } else {
         sprite.setloop(true);
-        $("#loopgif").css("color",  "red");
+        $('#loopgif').css('color', 'red');
       }
     });
     function updateControls(event) {
-      if(!sprite.get_looping()) {
-        $("#play").style.color = "black";
-        $("#stop").style.color = "red";
-        $("#pause").style.color = "black";
+      if (!sprite.get_looping()) {
+        $('#play').style.color = 'black';
+        $('#stop').style.color = 'red';
+        $('#pause').style.color = 'black';
         jig.output(0);
       }
     }
     document.addEventListener('gifloop', updateControls, false);
   };
   return {
-    init : init
+    init: init
   };
 });
 
-var SpriteCanvas = function ( options ) {
+var SpriteCanvas = function(options) {
   var playing = true;
   var loop = true;
   var loadError;
@@ -77,20 +77,24 @@ var SpriteCanvas = function ( options ) {
   var initialized = false;
   var load_callback = false;
   var controls = SpritePlayerControls();
-  var moveEvent = document.createEvent("Event");
-  moveEvent.initEvent("gifmove",true,true);
-  var loopEvent = document.createEvent("Event");
-  loopEvent.initEvent("gifloop",true,true);
+  var moveEvent = document.createEvent('Event');
+  moveEvent.initEvent('gifmove', true, true);
+  var loopEvent = document.createEvent('Event');
+  loopEvent.initEvent('gifloop', true, true);
 
   var frames = [];
 
   // var gif = options.gif;
   if (typeof options.auto_play == 'undefined') {
-    options.auto_play = false; //(!gif.getAttribute('rel:auto_play') || gif.getAttribute('rel:auto_play') == '1');
+    options.auto_play = false;
+    //(!gif.getAttribute('rel:auto_play') ||
+    //gif.getAttribute('rel:auto_play') == '1');
   }
 
   if (typeof options.rubbable == 'undefined') {
-    options.rubbable = false; //(!gif.getAttribute('rel:rubbable') || gif.getAttribute('rel:rubbable') == '1');
+    options.rubbable = false;
+    //(!gif.getAttribute('rel:rubbable') ||
+    //gif.getAttribute('rel:rubbable') == '1');
   }
 
   var onLoadInfo = function(width, height) {
@@ -105,7 +109,7 @@ var SpriteCanvas = function ( options ) {
     }
   };
 
-  var onLoadProgress = function (pos, length, draw) {
+  var onLoadProgress = function(pos, length, draw) {
     if (draw) {
       var height = 25;
       var top = (canvas.height - height);
@@ -124,8 +128,8 @@ var SpriteCanvas = function ( options ) {
     }
   };
 
-  var onLoadError = function (originOfError) {
-    var drawError = function () {
+  var onLoadError = function(originOfError) {
+    var drawError = function() {
       ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
       ctx.strokeStyle = 'red';
@@ -146,19 +150,19 @@ var SpriteCanvas = function ( options ) {
     frames.push(frame);
     if (!ctx_scaled)
     {
-      ctx.scale(get_canvas_scale(),get_canvas_scale());
+      ctx.scale(get_canvas_scale(), get_canvas_scale());
       ctx_scaled = true;
     }
   };
 
-  var player = (function () {
+  var player = (function() {
     var i = -1;
     var delayInfo;
 
     var showingInfo = false;
     var pinned = false;
 
-    var stepFrame = function (delta) { // XXX: Name is confusing.
+    var stepFrame = function(delta) { // XXX: Name is confusing.
       i = (i + delta + frames.length) % frames.length;
       delayInfo = frames[i].delay;
       putFrame();
@@ -167,10 +171,10 @@ var SpriteCanvas = function ( options ) {
       }
     };
 
-    var step = (function () {
+    var step = (function() {
       var stepping = false;
 
-      var doStep = function () {
+      var doStep = function() {
         stepping = playing;
         if (!stepping) return;
         if (!loop && i == frames.length - 1) {
@@ -179,38 +183,39 @@ var SpriteCanvas = function ( options ) {
         }
         stepFrame(forward ? 1 : -1);
         var delay = frames[i].delay * 10;
-        if (!delay) delay = 100; // FIXME: Should this even default at all? What should it be?
+        // FIXME: Should this even default at all? What should it be?
+        if (!delay) delay = 100;
         setTimeout(doStep, delay);
       };
 
-      return function () {
+      return function() {
         if (!stepping) setTimeout(doStep, 0);
       };
     }());
 
-    var putFrame = function () {
+    var putFrame = function() {
       ctx.putImageData(frames[i].data, 0, 0);
       document.dispatchEvent(moveEvent);
     };
 
-    var play = function () {
+    var play = function() {
       playing = true;
       step();
     };
 
-    var pause = function () {
+    var pause = function() {
       playing = false;
     };
 
-    var setloop = function (b) {
+    var setloop = function(b) {
       loop = b;
     };
 
     return {
-      init: function () {
+      init: function() {
         if (loadError) return;
 
-        ctx.scale(get_canvas_scale(),get_canvas_scale());
+        ctx.scale(get_canvas_scale(), get_canvas_scale());
 
         if (options.auto_play) {
           step();
@@ -227,14 +232,14 @@ var SpriteCanvas = function ( options ) {
       pause: pause,
       move_relative: stepFrame,
       length: function() { return frames.length; },
-      move_to: function ( frame_idx ) {
+      move_to: function(frame_idx) {
         i = frame_idx;
         putFrame();
       }
     };
   }());
 
-  var register_canvas_handers = function () {
+  var register_canvas_handers = function() {
 
     var maxTime = 1000,
         // allow movement if < 1000 ms (1 sec)
@@ -243,12 +248,12 @@ var SpriteCanvas = function ( options ) {
         startX = 0,
         startTime = 0;
 
-    var cantouch = "ontouchend" in document;
+    var cantouch = 'ontouchend' in document;
 
     var aj = 0;
     var last_played = 0;
 
-    var startup = function (e) {
+    var startup = function(e) {
       // prevent image drag (Firefox)
       e.preventDefault();
       if (options.auto_play) player.pause();
@@ -258,21 +263,21 @@ var SpriteCanvas = function ( options ) {
       var x = (pos.layerX > 0) ? pos.layerX : canvas.width / 2;
       var progress = x / canvas.width;
 
-      player.move_to( Math.floor(progress * (player.length() - 1)) );
+      player.move_to(Math.floor(progress * (player.length() - 1)));
 
       startTime = e.timeStamp;
       startX = pos.pageX;
     };
-    canvas.addEventListener((cantouch) ? 'touchstart' : 'mousedown', startup );
+    canvas.addEventListener((cantouch) ? 'touchstart' : 'mousedown', startup);
 
-    var shutdown = function (e) {
+    var shutdown = function(e) {
       startTime = 0;
       startX = 0;
       if (options.auto_play) player.play();
     };
     canvas.addEventListener((cantouch) ? 'touchend' : 'mouseup', shutdown);
 
-    var moveprogress = function (e) {
+    var moveprogress = function(e) {
       e.preventDefault();
       var pos = (e.touches && e.touches.length > 0) ? e.touches[0] : e;
 
@@ -292,62 +297,63 @@ var SpriteCanvas = function ( options ) {
       }
 
     };
-    canvas.addEventListener((cantouch) ? 'touchmove' : 'mousemove', moveprogress);
+    canvas.addEventListener((cantouch) ? 'touchmove' : 'mousemove',
+                            moveprogress);
   };
 
   var init_controls = function() {
-    $("#stop").css("color", "red");
-    $("#play").css("color",  "black");
-    $("#pause").css("color",  "black");
-    $("#loopgif").css("color",  "black");
+    $('#stop').css('color', 'red');
+    $('#play').css('color', 'black');
+    $('#pause').css('color', 'black');
+    $('#loopgif').css('color', 'black');
 
-    $("#play").click(function() {
-      $("#play").css("color",  "red");
-      $("#stop").css("color",  "black");
-      $("#pause").css("color",  "black");
+    $('#play').click(function() {
+      $('#play').css('color', 'red');
+      $('#stop').css('color', 'black');
+      $('#pause').css('color', 'black');
       player.play();
     });
-    $("#pause").click(function() {
-      $("#play").css("color",  "black");
-      $("#stop").css("color",  "black");
-      $("#pause").css("color",  "red");
+    $('#pause').click(function() {
+      $('#play').css('color', 'black');
+      $('#stop').css('color', 'black');
+      $('#pause').css('color', 'red');
       player.pause();
     });
-    $("#stop").click(function() {
-      $("#play").css("color",  "black");
-      $("#stop").css("color",  "red");
-      $("#pause").css("color",  "black");
+    $('#stop').click(function() {
+      $('#play').css('color', 'black');
+      $('#stop').css('color', 'red');
+      $('#pause').css('color', 'black');
       player.pause();
       player.move_to(0);
     });
-    $("#backward").click(function() {
+    $('#backward').click(function() {
       player.pause();
       player.move_relative(-1);
     });
-    $("#forward").click(function() {
+    $('#forward').click(function() {
       player.pause();
       player.move_relative(1);
     });
-    $("#loopgif").click(function() {
-      if(loop) {
+    $('#loopgif').click(function() {
+      if (loop) {
         loop = false;
-        $("#loopgif").css("color",  "black");
+        $('#loopgif').css('color', 'black');
       } else {
         loop = true;
-        $("#loopgif").css("color",  "red");
+        $('#loopgif').css('color', 'red');
       }
     });
     function updateControls(event) {
-      if(loop) {
-        $("#play").style.color = "black";
-        $("#stop").style.color = "red";
-        $("#pause").style.color = "black";
+      if (loop) {
+        $('#play').style.color = 'black';
+        $('#stop').style.color = 'red';
+        $('#pause').style.color = 'black';
       }
     }
     document.addEventListener('gifloop', updateControls, false);
   };
 
-  var init = function () {
+  var init = function() {
     if (initialized) return;
     canvas = document.createElement('canvas');
     ctx = canvas.getContext('2d');
@@ -399,11 +405,11 @@ var SpriteCanvas = function ( options ) {
     set_success_callback: function(s) {
       success_callback = s;
     },
-    onLoadInfo : onLoadInfo,
-    onLoadFrame : onLoadFrame,
-    onLoadError : onLoadError,
-    onLoadSuccess : onLoadSuccess,
-    onLoadProgress : onLoadProgress
+    onLoadInfo: onLoadInfo,
+    onLoadFrame: onLoadFrame,
+    onLoadError: onLoadError,
+    onLoadSuccess: onLoadSuccess,
+    onLoadProgress: onLoadProgress
   };
 
 };

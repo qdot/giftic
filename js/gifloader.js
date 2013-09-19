@@ -1,16 +1,16 @@
 "use strict";
 
 // Generic functions
-var bitsToNum = function (ba) {
-  return ba.reduce(function (s, n) {
+var bitsToNum = function(ba) {
+  return ba.reduce(function(s, n) {
     return s * 2 + n;
   }, 0);
 };
 
-var byteToBitArr = function (bite) {
+var byteToBitArr = function(bite) {
   var a = [];
   for (var i = 7; i >= 0; i--) {
-    a.push( !! (bite & (1 << i)));
+    a.push(!! (bite & (1 << i)));
   }
   return a;
 };
@@ -20,19 +20,19 @@ var byteToBitArr = function (bite) {
  * @constructor
  */
 // Make compiler happy.
-var Stream = function (data) {
+var Stream = function(data) {
   this.data = data;
   this.len = this.data.length;
   this.pos = 0;
 
-  this.readByte = function () {
+  this.readByte = function() {
     if (this.pos >= this.data.length) {
       throw new Error('Attempted to read past end of stream.');
     }
     return data.charCodeAt(this.pos++) & 0xFF;
   };
 
-  this.readBytes = function (n) {
+  this.readBytes = function(n) {
     var bytes = [];
     for (var i = 0; i < n; i++) {
       bytes.push(this.readByte());
@@ -40,7 +40,7 @@ var Stream = function (data) {
     return bytes;
   };
 
-  this.read = function (n) {
+  this.read = function(n) {
     var s = '';
     for (var i = 0; i < n; i++) {
       s += String.fromCharCode(this.readByte());
@@ -48,16 +48,17 @@ var Stream = function (data) {
     return s;
   };
 
-  this.readUnsigned = function () { // Little-endian.
+  this.readUnsigned = function() { // Little-endian.
     var a = this.readBytes(2);
     return (a[1] << 8) + a[0];
   };
 };
 
-var lzwDecode = function (minCodeSize, data) {
-  // TODO: Now that the GIF parser is a bit different, maybe this should get an array of bytes instead of a String?
+var lzwDecode = function(minCodeSize, data) {
+  // TODO: Now that the GIF parser is a bit different, maybe this should get an
+  // array of bytes instead of a String?
   var pos = 0; // Maybe this streaming thing should be merged with the Stream?
-  var readCode = function (size) {
+  var readCode = function(size) {
     var code = 0;
     for (var i = 0; i < size; i++) {
       if (data.charCodeAt(pos >> 3) & (1 << (pos & 7))) {
@@ -77,7 +78,7 @@ var lzwDecode = function (minCodeSize, data) {
 
   var dict = [];
 
-  var clear = function () {
+  var clear = function() {
     dict = [];
     codeSize = minCodeSize + 1;
     for (var i = 0; i < clearCode; i++) {
@@ -113,7 +114,8 @@ var lzwDecode = function (minCodeSize, data) {
     output.push.apply(output, dict[code]);
 
     if (dict.length === (1 << codeSize) && codeSize < 12) {
-      // If we're at the last code and codeSize is 12, the next code will be a clearCode, and it'll be 12 bits long.
+      // If we're at the last code and codeSize is 12, the next code will be a
+      // clearCode, and it'll be 12 bits long.
       codeSize++;
     }
   }
@@ -125,11 +127,11 @@ var lzwDecode = function (minCodeSize, data) {
 
 
 // The actual parsing; returns an object with properties.
-var parseGIF = function (st, handler) {
+var parseGIF = function(st, handler) {
   handler || (handler = {});
 
   // LZW (GIF-specific)
-  var parseCT = function (entries) { // Each entry is 3 bytes, for RGB.
+  var parseCT = function(entries) { // Each entry is 3 bytes, for RGB.
     var ct = [];
     for (var i = 0; i < entries; i++) {
       ct.push(st.readBytes(3));
@@ -137,7 +139,7 @@ var parseGIF = function (st, handler) {
     return ct;
   };
 
-  var readSubBlocks = function () {
+  var readSubBlocks = function() {
     var size, data;
     data = '';
     do {
@@ -147,11 +149,14 @@ var parseGIF = function (st, handler) {
     return data;
   };
 
-  var parseHeader = function () {
+  var parseHeader = function() {
     var hdr = {};
     hdr.sig = st.read(3);
     hdr.ver = st.read(3);
-    if (hdr.sig !== 'GIF') throw new Error('Not a GIF file.'); // XXX: This should probably be handled more nicely.
+    if (hdr.sig !== 'GIF') {
+      // XXX: This should probably be handled more nicely.
+      throw new Error('Not a GIF file.');
+    }
     hdr.width = st.readUnsigned();
     hdr.height = st.readUnsigned();
 
@@ -162,15 +167,16 @@ var parseGIF = function (st, handler) {
     hdr.gctSize = bitsToNum(bits.splice(0, 3));
 
     hdr.bgColor = st.readByte();
-    hdr.pixelAspectRatio = st.readByte(); // if not 0, aspectRatio = (pixelAspectRatio + 15) / 64
+    hdr.pixelAspectRatio = st.readByte();
+    // if not 0, aspectRatio = (pixelAspectRatio + 15) / 64
     if (hdr.gctFlag) {
       hdr.gct = parseCT(1 << (hdr.gctSize + 1));
     }
     handler.hdr && handler.hdr(hdr);
   };
 
-  var parseExt = function (block) {
-    var parseGCExt = function (block) {
+  var parseExt = function(block) {
+    var parseGCExt = function(block) {
       var blockSize = st.readByte(); // Always 4
       var bits = byteToBitArr(st.readByte());
       block.reserved = bits.splice(0, 3); // Reserved; should be 000.
@@ -187,12 +193,12 @@ var parseGIF = function (st, handler) {
       handler.gce && handler.gce(block);
     };
 
-    var parseComExt = function (block) {
+    var parseComExt = function(block) {
       block.comment = readSubBlocks();
       handler.com && handler.com(block);
     };
 
-    var parsePTExt = function (block) {
+    var parsePTExt = function(block) {
       // No one *ever* uses this. If you use it, deal with parsing it yourself.
       var blockSize = st.readByte(); // Always 12
       block.ptHeader = st.readBytes(12);
@@ -200,8 +206,8 @@ var parseGIF = function (st, handler) {
       handler.pte && handler.pte(block);
     };
 
-    var parseAppExt = function (block) {
-      var parseNetscapeExt = function (block) {
+    var parseAppExt = function(block) {
+      var parseNetscapeExt = function(block) {
         var blockSize = st.readByte(); // Always 3
         block.unknown = st.readByte(); // ??? Always 1? What is this?
         block.iterations = st.readUnsigned();
@@ -209,10 +215,12 @@ var parseGIF = function (st, handler) {
         handler.app && handler.app.NETSCAPE && handler.app.NETSCAPE(block);
       };
 
-      var parseUnknownAppExt = function (block) {
+      var parseUnknownAppExt = function(block) {
         block.appData = readSubBlocks();
         // FIXME: This won't work if a handler wants to match on any identifier.
-        handler.app && handler.app[block.identifier] && handler.app[block.identifier](block);
+        handler.app &&
+          handler.app[block.identifier] &&
+          handler.app[block.identifier](block);
       };
 
       var blockSize = st.readByte(); // Always 11
@@ -228,7 +236,7 @@ var parseGIF = function (st, handler) {
       }
     };
 
-    var parseUnknownExt = function (block) {
+    var parseUnknownExt = function(block) {
       block.data = readSubBlocks();
       handler.unknown && handler.unknown(block);
     };
@@ -258,15 +266,16 @@ var parseGIF = function (st, handler) {
     }
   };
 
-  var parseImg = function (img) {
-    var deinterlace = function (pixels, width) {
+  var parseImg = function(img) {
+    var deinterlace = function(pixels, width) {
       // Of course this defeats the purpose of interlacing. And it's *probably*
       // the least efficient way it's ever been implemented. But nevertheless...
       var newPixels = new Array(pixels.length);
       var rows = pixels.length / width;
-      var cpRow = function (toRow, fromRow) {
+      var cpRow = function(toRow, fromRow) {
         var fromPixels = pixels.slice(fromRow * width, (fromRow + 1) * width);
-        newPixels.splice.apply(newPixels, [toRow * width, width].concat(fromPixels));
+        newPixels.splice.apply(newPixels,
+                               [toRow * width, width].concat(fromPixels));
       };
 
       // See appendix E.
@@ -276,7 +285,7 @@ var parseGIF = function (st, handler) {
       var fromRow = 0;
       for (var pass = 0; pass < 4; pass++) {
         for (var toRow = offsets[pass]; toRow < rows; toRow += steps[pass]) {
-          cpRow(toRow, fromRow)
+          cpRow(toRow, fromRow);
           fromRow++;
         }
       }
@@ -313,7 +322,7 @@ var parseGIF = function (st, handler) {
     handler.img && handler.img(img);
   };
 
-  var parseBlock = function () {
+  var parseBlock = function() {
     var block = {};
     block.sentinel = st.readByte();
 
@@ -331,13 +340,14 @@ var parseGIF = function (st, handler) {
       handler.eof && handler.eof(block);
       break;
     default:
-      throw new Error('Unknown block: 0x' + block.sentinel.toString(16)); // TODO: Pad this with a 0.
+      // TODO: Pad this with a 0.
+      throw new Error('Unknown block: 0x' + block.sentinel.toString(16));
     }
 
     if (block.type !== 'eof') setTimeout(parseBlock, 0);
   };
 
-  var parse = function () {
+  var parse = function() {
     parseHeader();
     setTimeout(parseBlock, 0);
   };
@@ -345,7 +355,7 @@ var parseGIF = function (st, handler) {
   parse();
 };
 
-var GifLoader = function ( sprite ) {
+var GifLoader = function(sprite) {
   var stream;
   var hdr;
 
@@ -357,10 +367,10 @@ var GifLoader = function ( sprite ) {
   var disposalMethod = null;
   var lastDisposalMethod = null;
   var frame = null;
-  var tmpCanvas = document.createElement("canvas");
+  var tmpCanvas = document.createElement('canvas');
   var load_callback;
 
-  var clear = function () {
+  var clear = function() {
     transparency = null;
     delay = null;
     lastDisposalMethod = disposalMethod;
@@ -370,7 +380,7 @@ var GifLoader = function ( sprite ) {
 
   // XXX: There's probably a better way to handle catching exceptions when
   // callbacks are involved.
-  var doParse = function () {
+  var doParse = function() {
     try {
       parseGIF(stream, handler);
     }
@@ -379,14 +389,14 @@ var GifLoader = function ( sprite ) {
     }
   };
 
-  var doHdr = function (_hdr) {
+  var doHdr = function(_hdr) {
     hdr = _hdr;
     tmpCanvas.width = hdr.width;
     tmpCanvas.height = hdr.height;
     sprite.onLoadInfo(hdr.width, hdr.height);
   };
 
-  var doGCE = function (gce) {
+  var doGCE = function(gce) {
     pushFrame();
     clear();
     transparency = gce.transparencyGiven ? gce.transparencyIndex : null;
@@ -395,7 +405,7 @@ var GifLoader = function ( sprite ) {
     // We don't have much to do with the rest of GCE.
   };
 
-  var pushFrame = function () {
+  var pushFrame = function() {
     if (!frame) return;
     sprite.onLoadFrame({
       data: frame.getImageData(0, 0, hdr.width, hdr.height),
@@ -406,22 +416,26 @@ var GifLoader = function ( sprite ) {
   var firstImg = false;
   var firstCData = false;
 
-  var doImg = function (img) {
+  var doImg = function(img) {
     if (!frame) frame = tmpCanvas.getContext('2d');
     var ct = img.lctFlag ? img.lct : hdr.gct; // TODO: What if neither exists?
-    var cData = frame.getImageData(img.leftPos, img.topPos, img.width, img.height);
+    var cData = frame.getImageData(img.leftPos,
+                                   img.topPos,
+                                   img.width,
+                                   img.height);
 
-    img.pixels.forEach(function (pixel, i) {
+    img.pixels.forEach(function(pixel, i) {
       // cData.data === [R,G,B,A,...]
-      if (transparency !== pixel) { // This includes null, if no transparency was defined.
+      if (transparency !== pixel) {
+        // This includes null, if no transparency was defined.
         cData.data[i * 4 + 0] = ct[pixel][0];
         cData.data[i * 4 + 1] = ct[pixel][1];
         cData.data[i * 4 + 2] = ct[pixel][2];
         cData.data[i * 4 + 3] = 255; // Opaque.
       }
       else {
-        // TODO: Handle disposal method properly.
-        // XXX: When I get to an Internet connection, check which disposal method is which.
+        // TODO: Handle disposal method properly. XXX: When I get to an Internet
+        // connection, check which disposal method is which.
         if (lastDisposalMethod === 2 || lastDisposalMethod === 3) {
           cData.data[i * 4 + 3] = 0; // Transparent.
           // XXX: This is very very wrong.
@@ -442,18 +456,22 @@ var GifLoader = function ( sprite ) {
     frame.putImageData(cData, img.leftPos, img.topPos);
   };
 
-  var doDecodeProgress = function (draw) {
+  var doDecodeProgress = function(draw) {
     sprite.onLoadProgress(stream.pos, stream.data.length, draw);
   };
 
-  var doNothing = function () {};
+  var doNothing = function() {};
   /**
-   * @param{boolean=} draw Whether to draw progress bar or not; this is not idempotent because of translucency.
-   *                       Note that this means that the text will be unsynchronized with the progress bar on non-frames;
-   *                       but those are typically so small (GCE etc.) that it doesn't really matter. TODO: Do this properly.
+   * @param {boolean=} draw Whether to draw progress bar or not; this is not
+   *                       idempotent because of translucency. Note that this
+   *                       means that the text will be unsynchronized with the
+   *                       progress bar on non-frames; but those are typically
+   *                       so small (GCE etc.) that it doesn't really matter.
+   *                       TODO: Do this properly.
    */
-  var withProgress = function (fn, draw) {
-    return function (block) {
+
+  var withProgress = function(fn, draw) {
+    return function(block) {
       fn(block);
       doDecodeProgress(draw);
     };
@@ -469,7 +487,7 @@ var GifLoader = function ( sprite ) {
       NETSCAPE: withProgress(doNothing)
     },
     img: withProgress(doImg, true),
-    eof: function (block) {
+    eof: function(block) {
       pushFrame();
       doDecodeProgress(false);
       sprite.onLoadSuccess();
@@ -482,7 +500,7 @@ var GifLoader = function ( sprite ) {
   };
 
   return {
-    load: function (url, callback) {
+    load: function(url, callback) {
 
       if (callback) load_callback = callback;
       loading = true;
@@ -493,7 +511,7 @@ var GifLoader = function ( sprite ) {
         stream = new Stream(h.responseText);
         setTimeout(doParse, 0);
       };
-      h.onprogress = function (e) {
+      h.onprogress = function(e) {
         if (e.lengthComputable) sprite.onLoadProgress(e.loaded, e.total, true);
       };
       h.onerror = function() { sprite.onLoadError('xhr'); };
