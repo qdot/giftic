@@ -1,14 +1,46 @@
 "use strict";
 
-var JigglyOutput = function () {
-  Jiggly.setOutputMethod(Jiggly.outputMethods.HTML5AUDIO);
-  //Jiggly.setOutputMethod(Jiggly.outputMethods.WEBVIBRATION);
-  var output = function(n) {
-    Jiggly.runSpeed(75 * n, 1000);
-  };
-  return {
-    output: output,
-    mute: function(b) { Jiggly.mute(b); }
-  };
-};
+var OutputManager = (function () {
 
+  var outputs = [];
+  var active = [];
+  var display = undefined;
+
+  var addOutput = function(o) {
+    outputs.push(o);
+  };
+
+  var activateOutput = function(o) {
+    active.push(o);
+  };
+
+  var deactivateOutput = function(o) {
+    var i = active.indexOf(o);
+    active.splice(i, 1);
+    showActiveOutputs();
+  };
+
+  var updateActiveOutputs = function(speed, direction) {
+    for(var o in active) {
+      o.update(speed, direction);
+    }
+  };
+
+  var showActiveOutputs = function() {
+    display.children().each(function(i) {
+      this.detach();
+    });
+    for(var o in active) {
+    }
+  };
+
+  return {
+    setDisplayDiv: function (d) { display = d; },
+    add: addOutput,
+    activate: activateOutput,
+    deactivate: deactivateOutput,
+    show: undefined,
+    get outputList: { return outputs; }
+    update: updateActiveOutputs
+  };
+})();

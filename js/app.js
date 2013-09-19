@@ -11,7 +11,6 @@ $(document).ready(function() {
     var overidx = -1;
     var output = null;
     var muted = true;
-    var jig = new JigglyOutput();
     var mode;
 
     function switch_mode(m) {
@@ -67,6 +66,8 @@ $(document).ready(function() {
         e = $("#sprite").detach();
         $('.apppanel').append(e);
         e = $("#chartdiv").detach();
+        $('.apppanel').append(e);
+        e = $("#outputdiv").detach();
         $('.apppanel').append(e);
         e = $("#inspect-help").detach();
         $('.help-text').append(e);
@@ -193,9 +194,6 @@ $(document).ready(function() {
           }
         }
       }
-      if(output !== null && sprite.get_playing()) {
-        jig.output(output[cur_frame]);
-      }
     };
     document.addEventListener('gifmove', drawPoints, false);
 
@@ -289,18 +287,6 @@ $(document).ready(function() {
       $("#spritecanvas").append(sprite.get_canvas());
       switch_mode("preview");
     };
-
-    // $("#sound").addEventListener('click', (function() {
-    //   if(muted) {
-    //     jig.mute(false);
-    //     $("#sound").style.color = "red";
-    //     muted = false;
-    //   } else {
-    //     jig.mute(true);
-    //     $("#sound").style.color = "black";
-    //     muted = true;
-    //   }
-    // }));
 
     $("#furryporn").click(function() {
       loadapp("test.gif");
