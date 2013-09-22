@@ -41,17 +41,63 @@ $(document).ready(function() {
         $('#view-button').removeClass('disabled');
         e = $('#sprite').detach();
         $('.apppanel').append(e);
-        var e = $('#chartdiv').detach();
+        e = $('#chartdiv').detach();
         $('.apppanel').append(e);
+        e = $('#outputdiv').detach();
+        $('.apppanel').append(e);
+        prepare_output();
         break;
       default:
         break;
       }
     }
 
+    var add_output = function(evt) {
+      var s = document.getElementById('outputselect');
+      var index = s.selectedIndex;
+      var o = s.options[index];
+      var n = o.innerHTML;
+      var outputs = OutputManager.outputList;
+      var i;
+      for (i = 0; i < outputs.length; ++i) {
+        if (outputs[i].name === n) {
+          $('#outputdiv').append(outputs[i].template());
+          document.addEventListener('gifmove', function(evt) {
+            outputs[i].output(output[sprite.get_current_frame()]);
+          });
+          return;
+        }
+      }
+    };
+
+    var prepare_output = function() {
+      $('#outputdiv').empty();
+      var outputs = OutputManager.outputList;
+      var s = document.createElement('select');
+      s.setAttribute('id', 'outputselect');
+      var option;
+      var i = 0;
+      for (i = 0; i < outputs.length; ++i) {
+        option = document.createElement('option');
+        option.innerHTML = outputs[i].name;
+        s.appendChild(option);
+      }
+      $('#outputdiv').append(s);
+      var b = document.createElement('input');
+      b.setAttribute('type', 'button');
+      b.setAttribute('value', 'Add Manager');
+      b.addEventListener('click', add_output);
+      $('#outputdiv').append(b);
+    };
+
     var load_json = function() {
-      var block = $('#jsonblock').val();
-      var b = JSON.parse(block);
+      try {
+        var block = $('#jsonblock').val();
+        var b = JSON.parse(block);
+      } catch (e) {
+        console.log('Cannot load JSON');
+        return;
+      }
       output = b.outputs;
       show_graph();
     };
@@ -110,7 +156,6 @@ $(document).ready(function() {
         var pointIndex = sprite.get_current_frame();
         var x = plot.axes.xaxis.series_u2p(data[pointIndex][0]);
         var y = plot.axes.yaxis.series_u2p(data[pointIndex][1]);
-        console.log('x= ' + x + '  y= ' + y);
         var r = 5;
         var drawingCanvas = $('.jqplot-highlight-canvas')[0];
         var context = drawingCanvas.getContext('2d');
