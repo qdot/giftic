@@ -1,6 +1,6 @@
 'use strict';
 
-var OutputManager = (function () {
+var OutputManager = (function() {
 
   var outputs = [];
   var active = [];
@@ -21,7 +21,7 @@ var OutputManager = (function () {
   };
 
   var updateActiveOutputs = function(speed, direction) {
-    for(var o in active) {
+    for (var o in active) {
       o.update(speed, direction);
     }
   };
@@ -30,17 +30,17 @@ var OutputManager = (function () {
     display.children().each(function(i) {
       this.detach();
     });
-    for(var o in active) {
+    for (var o in active) {
     }
   };
 
   return {
-    setDisplayDiv: function (d) { display = d; },
+    get outputList() { return outputs; },
+    setDisplayDiv: function(d) { display = d; },
     add: addOutput,
     activate: activateOutput,
     deactivate: deactivateOutput,
     show: undefined,
-    get outputList: { return outputs; }
     update: updateActiveOutputs
   };
 })();
