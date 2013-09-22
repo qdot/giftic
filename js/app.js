@@ -3,7 +3,7 @@
 $(document).ready(function() {
 
   var giftic = (function() {
-
+    var fileurl;
     var sprite;
     var points = [];
     var canvas;
@@ -222,7 +222,7 @@ $(document).ready(function() {
 
       $('#json-export').val(JSON.stringify(
         {
-          name: '',
+          url: fileurl,
           giftic_version: '1.0',
           points: tracking_points,
           outputs: fixed_output
@@ -311,6 +311,7 @@ $(document).ready(function() {
     };
 
     var loadapp = function(src) {
+      fileurl = src;
       sprite = new SpriteCanvas({ auto_play: false, rubbable: false });
       sprite.init();
       var loader = new GifLoader(sprite);
@@ -340,16 +341,15 @@ $(document).ready(function() {
     });
 
     $('#gifsubmit').click(function() {
-      var src;
       if ($('#giffile').val() != '') {
-        src = $('#giffile').val().replace('C:\\fakepath\\', '');
+        loadapp($('#giffile').val().replace('C:\\fakepath\\', ''));
       } else if ($('#gifremoteurl').val() != '') {
-        src = 'http://distro.nonpolynomial.com/files/giftic/proxy.php?requrl=' +
-          $('#gifremoteurl').val();
+        loadapp('http://distro.nonpolynomial.com/' +
+                'files/giftic/proxy.php?requrl=' +
+                $('#gifremoteurl').val());
       } else {
-        src = $('#gifurl').val();
+        loadapp($('#gifurl').val());
       }
-      loadapp(src);
     });
 
     $('#select-button').click(function() {
