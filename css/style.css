@@ -60,3 +60,12 @@ li {
     padding: 0;
     margin: 0;
 }
+
+textarea {
+    width: 100%;
+    height: 100%;
+}
+
+#exportdiv {
+    height: 400px;
+}

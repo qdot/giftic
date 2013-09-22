@@ -62,7 +62,7 @@ $(document).ready(function() {
         break;
       case 'output':
         $('#inspect-button').addClass('active');
-        //$('#export-button').removeClass('disabled');
+        $('#export-button').removeClass('disabled');
         e = $('#sprite').detach();
         $('.apppanel').append(e);
         e = $('#chartdiv').detach();
@@ -75,6 +75,8 @@ $(document).ready(function() {
         break;
       case 'export':
         $('#export-button').addClass('active');
+        e = $('#exportdiv').detach();
+        $('.apppanel').append(e);
         break;
       default:
         break;
@@ -206,12 +208,35 @@ $(document).ready(function() {
     };
     document.addEventListener('gifmove', drawPoints, false);
 
+    var update_export = function() {
+      var tracking_points = [];
+      var fixed_output = [];
+      var i;
+      for (i = 0; i < points.length; ++i) {
+        tracking_points.push([(points[i].get_frame_point(0).x),
+                              (points[i].get_frame_point(0).y)]);
+      }
+      for (i = 0; i < output.length; ++i) {
+        fixed_output.push(parseFloat((output[i]).toFixed(4)));
+      }
+
+      $('#json-export').val(JSON.stringify(
+        {
+          name: '',
+          giftic_version: '1.0',
+          points: tracking_points,
+          outputs: fixed_output
+        }
+      ));
+    };
+
     var run_analysis = function() {
       var o = new OpticalFlowAnalyzer();
       document.removeEventListener('gifmove', drawPoints, false);
       o.analyze(sprite, points);
       var a = new IntensityAnalyzer();
       output = a.analyze(points);
+      update_export();
       //rebuild_point_list();
       document.addEventListener('gifmove', drawPoints, false);
       sprite.move_to(0);
