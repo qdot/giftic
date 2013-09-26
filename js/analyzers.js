@@ -54,6 +54,9 @@ var PointFrameArray = function(x, y) {
 var IntensityAnalyzer = function() {
   var max;
 
+  // TODO: This make horrible assumption that all points are moving the same
+  // direction at all times. Should fix this when awake enough to make better
+  // algorithm. Does job for now.
   var analyze = function(points) {
     var i;
     var frame_intensities = [];
@@ -63,11 +66,17 @@ var IntensityAnalyzer = function() {
       }
       var frames_is = [];
       var frame_num = 0;
+      var dir = 1;
       var prev = points[i].get_last_point();
       var curr = points[i].get_frame_point(frame_num);
       while (curr !== null) {
+        if ((prev.x * curr.y - prev.y * curr.x) < 0) {
+          dir = -1;
+        } else {
+          dir = 1;
+        }
         frames_is[frame_num] = Math.sqrt(Math.pow(curr.y - prev.y, 2) +
-                                         Math.pow(curr.x - prev.x, 2));
+                                         Math.pow(curr.x - prev.x, 2)) * dir;
         frame_num++;
         prev = curr;
         curr = points[i].get_frame_point(frame_num);
@@ -80,6 +89,7 @@ var IntensityAnalyzer = function() {
     var cmd = new CommandArray();
     var max = 0;
     var avg = 0;
+    var absavg = 0;
     var avgs = [];
     var c, j;
     for (i = 0; i < frame_intensities[0].length; ++i) {
@@ -88,7 +98,8 @@ var IntensityAnalyzer = function() {
         c += frame_intensities[j][i];
       }
       avg = c / frame_intensities.length;
-      if (avg > max) max = avg;
+      absavg = Math.abs(avg);
+      if (absavg > max) max = absavg;
       avgs.push(avg);
     }
     var final_avg = [];
