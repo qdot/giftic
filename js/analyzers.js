@@ -1,3 +1,15 @@
+/*
+ * giftic - Optical Flow Analyzer
+ * By Kyle Machulis (qDot) <kyle@nonpolynomial,com>
+ *
+ * Copyright Kyle Machulis (qDot)/Nonpolynomial Labs, 2013
+ *
+ * giftic is BSD Licensed. See giftic project license.txt for details.
+ *
+ * Description: Optical flow analyzer code. mostly adapted from jsfeat optical
+ * flow analyzer example.
+ */
+
 'use strict';
 
 var CommandArray = function() {

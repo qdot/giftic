@@ -1,3 +1,19 @@
+/*
+ * giftic - Canvas with animation commands for loading/moving frames
+ * By Kyle Machulis (qDot) <kyle@nonpolynomial,com>
+ *
+ * Copyright Kyle Machulis (qDot)/Nonpolynomial Labs, 2013
+ * Some sprite code Copyright (c) 2011 Shachaf Ben-Kiki
+ * Some code also from libgif.js, who didn't license their work.
+ *
+ * giftic is BSD Licensed. See giftic project license.txt for details.
+ *
+ * Description: Canvas that frames from an animation are loaded to. Has ability
+ * to move back and forth between frames. Once again, mostly taken from
+ * jsgif/libgif, with some changes since we're not interested in things like
+ * scrubbing.
+ */
+
 'use strict';
 
 var SpriteLoaderCallbacks = {

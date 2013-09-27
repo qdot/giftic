@@ -1,3 +1,16 @@
+/*
+ * giftic - Jiggly.js Output Plugin
+ * By Kyle Machulis (qDot) <kyle@nonpolynomial,com>
+ *
+ * Copyright Kyle Machulis (qDot)/Nonpolynomial Labs, 2013
+ *
+ * giftic is BSD Licensed. See giftic project license.txt for details.
+ *
+ * Description: Jiggly.js is a library that abstracts vibration mechanisms
+ * (gamepad, audio, webvibrate) so that the same speed command can route to any
+ * mechanism easily.
+ */
+
 'use strict';
 
 var JigglyOutput = function() {

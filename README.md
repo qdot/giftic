@@ -11,9 +11,9 @@ giftic eats gifs and outputs feels.
 It's a haptic renderer for animated GIFs. Actually, it's a haptic
 renderer for anything that can be decomposed into frames and rendered
 to an HTML5 canvas, so it'll work with SVG, APNG, and other formats,
-though GIFs are probably going to be the most popular use case. It
-also can put out control signals to whatever you want, not just haptic
-control. But we're getting ahead of ourselves here.
+though GIFs will probably be the most popular use case. It also can
+put out control signals to whatever you want, not just haptic control.
+But we're getting ahead of ourselves here.
 
 For the haptic rendering, there's multiple output methods giftic
 can use:
@@ -56,6 +56,8 @@ giftic is built on top of the following libraries:
   Flow Algorithm for auto encoding
 * [jiggly.js](http://github.com/qdot/jiggly.js) - Vibration output
   abstraction
+* [realtouch.js](http://github.com/feverything/realtouch.js) -
+  Realtouch output
 * [howler.js](http://github.com/goldfire/howler.js) - Audio output
   abstraction
 

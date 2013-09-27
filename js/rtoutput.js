@@ -1,3 +1,15 @@
+/*
+ * giftic - RealTouch.js Output Plugin
+ * By Kyle Machulis (qDot) <kyle@nonpolynomial,com>
+ *
+ * Copyright Kyle Machulis (qDot)/Nonpolynomial Labs, 2013
+ *
+ * giftic is BSD Licensed. See giftic project license.txt for details.
+ *
+ * Description: Realtouch.js uses a network connection to send commands to the
+ * Realtouch Agent, either through websockets or a TCP Socket if we have it
+ * available to us (we usually don't).
+ */
 'use strict';
 
 var RealTouchOutput = function() {

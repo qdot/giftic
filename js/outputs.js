@@ -1,3 +1,14 @@
+/*
+ * giftic - Output Manager code
+ * By Kyle Machulis (qDot) <kyle@nonpolynomial,com>
+ *
+ * Copyright Kyle Machulis (qDot)/Nonpolynomial Labs, 2013
+ *
+ * giftic is BSD Licensed. See giftic project license.txt for details.
+ *
+ * Description: Manage haptic output plugins
+ */
+
 'use strict';
 
 var OutputManager = (function() {

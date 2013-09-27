@@ -1,3 +1,16 @@
+/*
+ * giftic - Logic for Viewer App
+ * By Kyle Machulis (qDot) <kyle@nonpolynomial,com>
+ *
+ * Copyright Kyle Machulis (qDot)/Nonpolynomial Labs, 2013
+ *
+ * giftic is BSD Licensed. See giftic project license.txt for details.
+ *
+ * Description: Code to glue together common giftic components for the viewer
+ * app. Viewer really only needs to load a gif and a json block and make it
+ * playable via whatever is selected in the output manager.
+ */
+
 'use strict';
 
 $(document).ready(function() {

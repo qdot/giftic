@@ -1,3 +1,19 @@
+/*
+ * giftic - GIF loading code
+ * By Kyle Machulis (qDot) <kyle@nonpolynomial,com>
+ *
+ * Copyright Kyle Machulis (qDot)/Nonpolynomial Labs, 2013
+ * Some gif loading code Copyright (c) 2011 Shachaf Ben-Kiki
+ * Some code also from libgif.js, who didn't license their work.
+ *
+ * giftic is BSD Licensed. See giftic project license.txt for details.
+ *
+ * Description: Low level gif loading code. Mostly taken verbatum from jsgif
+ * project, though libgif.js slightly reorganized it. Abstracted here so we can
+ * keep a working, proven version while trying stupid things like making an
+ * asm.js loader.
+ */
+
 "use strict";
 
 // Generic functions
