@@ -341,7 +341,10 @@ $(document).ready(function() {
     });
 
     $('#gifsubmit').click(function() {
-      if ($('#giffile').val() != '') {
+      if ($('#giflocalurl').val() != '') {
+        loadapp('http://127.0.0.1:8080/gifload' +
+                '?g=' + $('#giflocalurl').val());
+      } else if ($('#giffile').val() != '') {
         loadapp($('#giffile').val().replace('C:\\fakepath\\', ''));
       } else if ($('#gifremoteurl').val() != '') {
         loadapp('http://distro.nonpolynomial.com/' +
