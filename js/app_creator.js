@@ -315,7 +315,11 @@ $(document).ready(function() {
       sprite = new SpriteCanvas({ auto_play: false, rubbable: false });
       sprite.init();
       var loader = new GifLoader(sprite);
-      loader.load(src);
+      if (typeof src === 'object') {
+        loader.load_file(src);
+      } else {
+        loader.load_url(src);
+      }
       canvas = sprite.get_canvas();
       ctx = canvas.getContext('2d');
       sprite.setloop(false);
@@ -345,7 +349,7 @@ $(document).ready(function() {
         loadapp('http://127.0.0.1:8080/gifload' +
                 '?g=' + $('#giflocalurl').val());
       } else if ($('#giffile').val() != '') {
-        loadapp($('#giffile').val().replace('C:\\fakepath\\', ''));
+        loadapp(document.getElementById('giffile').files[0]);
       } else if ($('#gifremoteurl').val() != '') {
         loadapp('http://distro.nonpolynomial.com/' +
                 'files/giftic/proxy.php?requrl=' +

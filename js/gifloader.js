@@ -516,7 +516,7 @@ var GifLoader = function(sprite) {
   };
 
   return {
-    load: function(url, callback) {
+    load_url: function(url, callback) {
 
       if (callback) load_callback = callback;
       loading = true;
@@ -528,11 +528,31 @@ var GifLoader = function(sprite) {
         setTimeout(doParse, 0);
       };
       h.onprogress = function(e) {
-        if (e.lengthComputable) sprite.onLoadProgress(e.loaded, e.total, true);
+        if (e.lengthComputable) {
+          sprite.onLoadProgress(e.loaded, e.total, true);
+        }
       };
       h.onerror = function() { sprite.onLoadError('xhr'); };
       h.open('GET', url, true);
       h.send();
+    },
+    load_file: function(file, callback) {
+      var h = new FileReader();
+      if (callback) load_callback = callback;
+      loading = true;
+      h.onloadend = function(evt) {
+        if (evt.target.readyState == FileReader.DONE) {
+          stream = new Stream(evt.target.result);
+          setTimeout(doParse, 0);
+        }
+      };
+      h.onprogress = function(e) {
+        if (e.lengthComputable) {
+          sprite.onLoadProgress(e.loaded, e.total, true);
+        }
+      };
+      h.onerror = function() { sprite.onLoadError('file'); };
+      h.readAsBinaryString(file);
     }
   };
 };
