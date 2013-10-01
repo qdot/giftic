@@ -69,3 +69,25 @@ textarea {
 #exportdiv {
     height: 400px;
 }
+
+#modeselect {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		color: #dfdfdf;
+		text-align: center;
+		vertical-align: middle;
+		font-size: 250pt;
+}
+
+#modeselectbuttons { 
+		position: absolute;
+		color: #000;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 400px; 
+		font-size: 20pt;
+}
+

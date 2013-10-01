@@ -3,6 +3,7 @@
 $(document).ready(function() {
 
   var giftic = (function() {
+    var appmode;
     var fileurl;
     var sprite;
     var points = [];
@@ -27,59 +28,87 @@ $(document).ready(function() {
         e = $(this).detach();
         $('#appelements').append(e);
       });
-      $('#select-button').removeClass('active');
-      $('#preview-button').removeClass('active');
-      $('#spoints-button').removeClass('active');
-      $('#inspect-button').removeClass('active');
-      $('#export-button').removeClass('active');
 
-      switch (m) {
-      case 'file':
-        $('#select-button').addClass('active');
-        e = $('#fileinput').detach();
-        $('.apppanel').append(e);
-        e = $('#fileinput-help').detach();
-        $('.help-text').append(e);
-        break;
-      case 'preview':
-        $('#preview-button').addClass('active');
-        $('#preview-button').removeClass('disabled');
-        $('#spoints-button').removeClass('disabled');
-        $('#inspect-button').removeClass('disabled');
-        e = $('#sprite').detach();
-        $('.apppanel').append(e);
-        e = $('#preview-help').detach();
-        $('.help-text').append(e);
-        canvas.removeEventListener('click', on_canvas_click, false);
-        break;
-      case 'select':
-        $('#spoints-button').addClass('active');
-        e = $('#sprite').detach();
-        $('.apppanel').append(e);
-        e = $('#select-help').detach();
-        $('.help-text').append(e);
-        canvas.addEventListener('click', on_canvas_click, false);
-        break;
-      case 'output':
-        $('#inspect-button').addClass('active');
-        $('#export-button').removeClass('disabled');
-        e = $('#sprite').detach();
-        $('.apppanel').append(e);
-        e = $('#chartdiv').detach();
-        $('.apppanel').append(e);
-        e = $('#outputdiv').detach();
-        $('.apppanel').append(e);
-        e = $('#inspect-help').detach();
-        $('.help-text').append(e);
-        run_analysis();
-        break;
-      case 'export':
-        $('#export-button').addClass('active');
-        e = $('#exportdiv').detach();
-        $('.apppanel').append(e);
-        break;
-      default:
-        break;
+      if (appmode === "create") {
+        $('#create-select-button').removeClass('active');
+        $('#create-preview-button').removeClass('active');
+        $('#create-spoints-button').removeClass('active');
+        $('#create-inspect-button').removeClass('active');
+        $('#create-export-button').removeClass('active');
+
+        switch (m) {
+        case 'file':
+          $('#create-select-button').addClass('active');
+          e = $('#fileinput').detach();
+          $('.apppanel').append(e);
+          e = $('#fileinput-help').detach();
+          $('.help-text').append(e);
+          break;
+        case 'preview':
+          $('#create-preview-button').addClass('active');
+          $('#create-preview-button').removeClass('disabled');
+          $('#create-spoints-button').removeClass('disabled');
+          $('#create-inspect-button').removeClass('disabled');
+          e = $('#sprite').detach();
+          $('.apppanel').append(e);
+          e = $('#preview-help').detach();
+          $('.help-text').append(e);
+          canvas.removeEventListener('click', on_canvas_click, false);
+          break;
+        case 'select':
+          $('#create-spoints-button').addClass('active');
+          e = $('#sprite').detach();
+          $('.apppanel').append(e);
+          e = $('#select-help').detach();
+          $('.help-text').append(e);
+          canvas.addEventListener('click', on_canvas_click, false);
+          break;
+        case 'output':
+          $('#create-inspect-button').addClass('active');
+          $('#create-export-button').removeClass('disabled');
+          e = $('#sprite').detach();
+          $('.apppanel').append(e);
+          e = $('#chartdiv').detach();
+          $('.apppanel').append(e);
+          e = $('#outputdiv').detach();
+          $('.apppanel').append(e);
+          e = $('#inspect-help').detach();
+          $('.help-text').append(e);
+          run_analysis();
+          break;
+        case 'export':
+          $('#create-export-button').addClass('active');
+          e = $('#exportdiv').detach();
+          $('.apppanel').append(e);
+          break;
+        default:
+          break;
+        }
+      } else {
+        $('#view-select-button').removeClass('active');
+        $('#view-view-button').removeClass('active');
+
+        switch (m) {
+        case 'select':
+          $('#view-select-button').addClass('active');
+          $('#view-view-button').addClass('disabled');
+          e = $('#fileinput').detach();
+          $('.apppanel').append(e);
+          break;
+        case 'view':
+          $('#view-view-button').addClass('active');
+          $('#view-view-button').removeClass('disabled');
+          e = $('#sprite').detach();
+          $('.apppanel').append(e);
+          e = $('#chartdiv').detach();
+          $('.apppanel').append(e);
+          e = $('#outputdiv').detach();
+          $('.apppanel').append(e);
+          prepare_output();
+          break;
+        default:
+          break;
+        }
       }
     }
 
@@ -359,37 +388,75 @@ $(document).ready(function() {
       }
     });
 
-    $('#select-button').click(function() {
-      if (!$('#select-button').hasClass('disabled')) {
+    $('#create-select-button').click(function() {
+      if (!$('#create-select-button').hasClass('disabled')) {
         switch_mode('file');
       }
     });
 
-    $('#preview-button').click(function() {
-      if (!$('#preview-button').hasClass('disabled')) {
+    $('#view-select-button').click(function() {
+      if (!$('#view-select-button').hasClass('disabled')) {
+        switch_mode('file');
+      }
+    });
+
+    $('#create-preview-button').click(function() {
+      if (!$('#create-preview-button').hasClass('disabled')) {
         switch_mode('preview');
       }
     });
 
-    $('#spoints-button').click(function() {
-      if (!$('#spoints-button').hasClass('disabled')) {
+    $('#create-spoints-button').click(function() {
+      if (!$('#create-spoints-button').hasClass('disabled')) {
         switch_mode('select');
       }
     });
 
-    $('#inspect-button').click(function() {
-      if (!$('#inspect-button').hasClass('disabled')) {
+    $('#create-inspect-button').click(function() {
+      if (!$('#create-inspect-button').hasClass('disabled')) {
         switch_mode('output');
       }
     });
 
-    $('#export-button').click(function() {
-      if (!$('#inspect-button').hasClass('disabled')) {
+    $('#create-export-button').click(function() {
+      if (!$('#create-inspect-button').hasClass('disabled')) {
         switch_mode('export');
       }
     });
 
-    switch_mode('file');
+    $('#view-view-button').click(function() {
+      if (!$('#view-view-button').hasClass('disabled')) {
+        switch_mode('view');
+      }
+    });
+
+    $('#createmode').click(function() {
+      appmode = "create";
+      var e;
+      $('.appdiv').children().each(function(i) {
+        e = $(this).detach();
+        $('#appelements').append(e);
+      });
+      e = $('.creator-navigation').detach();
+      $('.appdiv').append(e);
+      e = $('.application').detach();
+      $('.appdiv').append(e);
+      switch_mode('file');
+    });
+
+    $('#viewmode').click(function() {
+      appmode = "view";
+      var e;
+      $('.appdiv').children().each(function(i) {
+        e = $(this).detach();
+        $('#appelements').append(e);
+      });
+      e = $('.viewer-navigation').detach();
+      $('.appdiv').append(e);
+      e = $('.application').detach();
+      $('.appdiv').append(e);
+      switch_mode('select');
+    });
   });
 
   giftic();

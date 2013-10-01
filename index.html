@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="extjs/jquery/jquery-2.0.3.min.js" ></script>
+    <script type="text/javascript" src="extjs/jsfeat/jsfeat.js"></script>
+    <script type="text/javascript" src="extjs/howler/howler.js"></script>
+    <script type="text/javascript" src="extjs/jiggly/jiggly.js"></script>
+    <script type="text/javascript" src="extjs/jqplot/jquery.jqplot.min.js"></script>
+    <script type="text/javascript" src="extjs/jqplot/jqplot.highlighter.min.js"></script>
+    <script type="text/javascript" src="extjs/jqplot/jqplot.dragable.min.js"></script>
+    <script type="text/javascript" src="extjs/bootstrap/bootstrap.min.js"></script>
+    <script type="text/javascript" src="js/gifloader.js"></script>
+    <script type="text/javascript" src="js/spritecanvas.js"></script>
+    <script type="text/javascript" src="js/analyzers.js"></script>
+    <script type="text/javascript" src="js/outputs.js"></script>
+    <script type="text/javascript" src="js/app_creator.js"></script>
+    <link rel="stylesheet" type="text/css" href="extjs/bootstrap/bootstrap.css" media="screen" />
+    <link rel="stylesheet" type="text/css" href="extjs/jqplot/jquery.jqplot.css" />
+    <link rel="stylesheet" type="text/css" href="css/style.css" media="screen" />
+    <link href="http://netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" rel="stylesheet"/>
+    <title>giftic</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="appdiv">
+				<div id="modeselect">
+					<div id="modeselectbg">
+						giftic
+						<div id="modeselectbuttons">
+							<button id="createmode" type="button" class="btn btn-default btn-lg"><strong>Create</strong></button>
+							<button id="viewmode" type="button" class="btn btn-default btn-lg"><strong>View</strong></button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div id="appelements">
+				<div class="creator-navigation">
+					<div>
+						<ul class="nav nav-pills">
+							<li id="create-select-button" class="active btn-sm"><a href="#">File Select</a></li>
+							<li id="create-preview-button" class="disabled btn-sm"><a href="#">Preview</a></li>
+							<li id="create-spoints-button" class="disabled btn-sm"><a href="#">Point Select</a></li>
+							<li id="create-inspect-button" class="disabled btn-sm"><a href="#">Inspect/Output</a></li>
+							<li id="create-export-button" class="disabled btn-sm"><a href="#">Export</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="viewer-navigation">
+					<div>
+						<ul class="nav nav-pills">
+							<li id="view-select-button" class="active btn-sm"><a href="#">Select</a></li>
+							<li id="view-view-button" class="active btn-sm"><a href="#">View</a></li>
+						</ul>
+					</div>
+				</div>
+				<div class="application">
+					<div class="panel">
+						<div class="panel-body">
+							<div class="apppanel">
+							</div>
+						</div>
+					</div>
+					<div class="panel">
+						<div class="panel-body">
+							<div class="help-text">
+							</div>
+						</div>
+					</div>
+				</div>
+				<div id="fileinput">
+					Local URL: <input id="giflocalurl" type="text" />
+					Direct URL: <input id="gifurl" type="text" />
+					File: <input id="giffile" type="file" />
+					Remote URL (Only needed if using on website): <input id="gifremoteurl" type="text" />
+					<input id="gifsubmit" value="submit" type="submit" />
+					<p>Defaults:</p>
+					<div><a id="furryporn">furry porn (2mb)</a></div>
+					<div><a id="bigfurryporn">furry porn stress test (7mb)</a></div>
+					<div><a id="blowjob">blowjob (400k)</a></div>
+					<div><a id="weird">weird bouncing ball (60k)</a></div>
+				</div>
+				<div id="fileinput-help">
+					<p>Welcome to giftic! To begin, enter the URL of an
+					animated gif file, or choose a file on your local
+					computer.</p>
+				</div>
+				<div id="sprite">
+					<div id="spritediv">
+						<div id="spritecanvas" class="gifdiv"></div>
+					</div>
+					<div id="spritecontrols">
+						<ul>
+							<li id="play"><i class="icon-play"></i></li>
+							<li id="pause"><i class="icon-pause"></i></li>
+							<li id="stop"><i class="icon-stop"></i></li>
+							<li id="backward"><i class="icon-step-backward"></i></li>
+							<li id="forward"><i class="icon-step-forward"></i></li>
+							<li id="loopgif"><i class="icon-refresh"></i></li>
+						</ul>
+					</div>
+				</div>
+				<div id="preview-help">
+					<p>Now that the file is loaded, you can play through it to
+					make sure it's correct, or step through the frames to see
+					details you may want to catch in the analysis step.</p>
+					<p>When ready to select points, clikc the "Point Select"
+					button above.</p>
+				</div>
+				<div id="select-help">
+					<p>Click points on the image where you would like to
+					track motion. The set of points should have matching
+					motion, otherwise the output won't work correctly.</p>
+					<p>Once you're finished selecting points, click on the
+					"Inspect/Output" button above to continue.</p>
+				</div>
+				<div id="inspect-help">
+					<p>The color of the points denotes whether or not motion
+					analysis was successful. Green points were tracked all the
+					way through the animation, while red points failed to be
+					tracked until the end.</p>
+					<p>The motion of the green points is averaged per frame,
+					creating the graph you see below the image now. Hitting
+					play on the image will show you the average motion per
+					frame, as well as the motiong of tracking points.</p>
+				</div>
+				<div id="chartdiv" style="height:200px;width:600px;clear:both; "></div>
+				<div id="outputdiv"></div>
+				<div id="exportdiv"><textarea id="json-export"></textarea><input type="button" value="Copy to Clipboard" id="export-copy" /></div>
+			</div>
+    </div>
+  </body>
+</html>
