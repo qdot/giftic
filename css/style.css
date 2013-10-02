@@ -91,3 +91,34 @@ textarea {
 		font-size: 20pt;
 }
 
+#fileselectform { 
+		position: absolute;
+		color: #000;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 90%; 
+		font-size: 20pt;
+}
+
+#fileselect input {
+		font-size: 10pt;
+		width: 90%;
+		background-color: #BFBDBD;
+    border:solid 1px #BFBDBD;
+		margin-bottom: 5px;
+}
+
+#fileselectgo {
+		font-size: 50pt;
+}
+
+#modeselectbuttons > div { 
+		float: left;
+}
+
+#fileinput {
+		visibility: hidden;
+		width: 0;
+		height: 0;
+}

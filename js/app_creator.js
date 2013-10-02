@@ -20,14 +20,14 @@ $(document).ready(function() {
       }
       mode = m;
       var e;
-      $('.apppanel').children().each(function(i) {
-        e = $(this).detach();
-        $('#appelements').append(e);
-      });
-      $('.help-text').children().each(function(i) {
-        e = $(this).detach();
-        $('#appelements').append(e);
-      });
+      // $('.apppanel').children().each(function(i) {
+      //   e = $(this).detach();
+      //   $('#appelements').append(e);
+      // });
+      // $('.help-text').children().each(function(i) {
+      //   e = $(this).detach();
+      //   $('#appelements').append(e);
+      // });
 
       if (appmode === "create") {
         $('#create-select-button').removeClass('active');
@@ -38,12 +38,15 @@ $(document).ready(function() {
 
         switch (m) {
         case 'file':
-          $('#create-select-button').addClass('active');
-          e = $('#fileinput').detach();
-          $('.apppanel').append(e);
-          e = $('#fileinput-help').detach();
-          $('.help-text').append(e);
+          e = $('.file-opener').detach();
+          $('.appdiv').append(e);
           break;
+          // $('#create-select-button').addClass('active');
+          // e = $('#fileinput').detach();
+          // $('.apppanel').append(e);
+          // e = $('#fileinput-help').detach();
+          // $('.help-text').append(e);
+          // break;
         case 'preview':
           $('#create-preview-button').addClass('active');
           $('#create-preview-button').removeClass('disabled');
@@ -373,18 +376,43 @@ $(document).ready(function() {
       loadapp('test2.gif');
     });
 
+    // http://stackoverflow.com/questions/8498592/extract-root-domain-name-from-string
+    function url_domain(data) {
+      var a = document.createElement('a');
+      a.href = data;
+      return a.hostname;
+    }
+
+    function url_protocol(data) {
+      var a = document.createElement('a');
+      a.href = data;
+      return a.protocol;
+    }
+
     $('#gifsubmit').click(function() {
-      if ($('#giflocalurl').val() != '') {
+      if (document.getElementById('fileinput').files.length > 0) {
+        loadapp(document.getElementById('fileinput').files[0]);
+        return;
+      }
+      var url = $('#fileselect').val();
+      var docurl = window.location.href;
+      var dochost = url_domain(docurl);
+      var urlhost = url_domain(url);
+      if (urlhost === dochost) {
+        // If we're on the same domain, load as usual. This may break if we're
+        // trying to open file:// while accessing giftic from file:// but
+        // whatever.
+        loadapp(url);
+      } else if (dochost === "localhost" || dochost === "127.0.0.1") {
+        // If we're already on the local test webserver, use its bouncer to get
+        // around CORS
         loadapp('http://127.0.0.1:8080/gifload' +
                 '?g=' + $('#giflocalurl').val());
-      } else if ($('#giffile').val() != '') {
-        loadapp(document.getElementById('giffile').files[0]);
-      } else if ($('#gifremoteurl').val() != '') {
+      } else {
+        // If we're remote or else using file:// access, use the remote bouncer
         loadapp('http://distro.nonpolynomial.com/' +
                 'files/giftic/proxy.php?requrl=' +
                 $('#gifremoteurl').val());
-      } else {
-        loadapp($('#gifurl').val());
       }
     });
 
@@ -437,10 +465,10 @@ $(document).ready(function() {
         e = $(this).detach();
         $('#appelements').append(e);
       });
-      e = $('.creator-navigation').detach();
-      $('.appdiv').append(e);
-      e = $('.application').detach();
-      $('.appdiv').append(e);
+      // e = $('.creator-navigation').detach();
+      // $('.appdiv').append(e);
+      // e = $('.application').detach();
+      // $('.appdiv').append(e);
       switch_mode('file');
     });
 
@@ -451,12 +479,21 @@ $(document).ready(function() {
         e = $(this).detach();
         $('#appelements').append(e);
       });
-      e = $('.viewer-navigation').detach();
-      $('.appdiv').append(e);
-      e = $('.application').detach();
-      $('.appdiv').append(e);
+      // e = $('.viewer-navigation').detach();
+      // $('.appdiv').append(e);
+      // e = $('.application').detach();
+      // $('.appdiv').append(e);
       switch_mode('select');
     });
+
+		$('#filebutton').click(function(e) {
+			$('#fileinput').click();
+		});
+
+		$('#fileinput').change(function(e) {
+      $('#fileselect').val($('#fileinput').val());
+		});
+
   });
 
   giftic();
