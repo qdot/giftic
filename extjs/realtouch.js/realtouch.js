@@ -118,8 +118,7 @@ var RealTouchMozTCPSocketConnector = (function() {
 
   var send = function(str) {
     console.log(str);
-    socket.send(str);
-    socket.send('\n');
+    console.log(socket.send(str + '\n'));
   };
 
   return {

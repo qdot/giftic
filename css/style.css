@@ -1,38 +1,3 @@
-#appelements {
-    display: none;
-}
-
-ul {
-    list-style: none;
-    padding: 0px;
-    margin-left: 0px;
-    margin-right: 0px;
-    margin-top: 0px;
-    margin-bottom: 5px;
-}
-
-#points li {
-    display: block;
-}
-
-input {
-    display: block;
-}
-
-#pointlist li {
-    display: block;
-    margin-left: 3px;
-}
-
-#pointlist a:hover {
-    color: #00FFFF;
-}
-
-li {
-    display: inline;
-    margin-left: 3px;
-}
-
 #newpoint {
     color: blue;
 }
@@ -45,32 +10,19 @@ li {
     color: red;
 }
 
-.appdiv {
-    width: 650px;
-    margin: 0 auto;
-}
-
-.help-text {
-    padding: 0;
-    margin: 0;
-    font-size: 10pt;
-}
-
-.help-text p {
-    padding: 0;
-    margin: 0;
-}
-
 textarea {
     width: 100%;
     height: 100%;
 }
 
-#exportdiv {
-    height: 400px;
+.giftic-panel {
+		border: 1px solid #999;
+		border-radius: 6px;
+		padding: 10px;
 }
 
-#modeselect {
+#app-background {
+		z-index: -1;
 		position: absolute;
 		left: 50%;
 		top: 50%;
@@ -81,44 +33,85 @@ textarea {
 		font-size: 250pt;
 }
 
-#modeselectbuttons { 
+#file-panel { 
 		position: absolute;
 		color: #000;
 		left: 50%;
 		top: 50%;
 		transform: translate(-50%, -50%);
-		width: 400px; 
+		width: 30%;
 		font-size: 20pt;
+		text-align: center;
 }
 
-#fileselectform { 
-		position: absolute;
-		color: #000;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
-		width: 90%; 
-		font-size: 20pt;
-}
-
-#fileselect input {
-		font-size: 10pt;
+#file-panel input {
+		font-size: 12pt;
 		width: 90%;
 		background-color: #BFBDBD;
-    border:solid 1px #BFBDBD;
+    border: 0px;
 		margin-bottom: 5px;
 }
 
-#fileselectgo {
-		font-size: 50pt;
-}
-
-#modeselectbuttons > div { 
-		float: left;
+#file-panel button {
+		margin-left: 5px;
+		margin-right: 5px;
 }
 
 #fileinput {
 		visibility: hidden;
 		width: 0;
 		height: 0;
+}
+
+#application {
+		display: none;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		width: 1000px;
+}
+
+#loading-panel {
+		display: none;
+		text-align: center;
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+}
+
+#sprite-controls {
+		text-align: left;
+}
+
+#analysis-controls {
+		text-align: right;
+}
+
+.controls ul {
+		font-size: 14pt;
+    liststyle: none;
+    padding: 0px;
+    marginleft: 0px;
+    marginright: 0px;
+    margintop: 0px;
+    marginbottom: 5px;
+}
+
+.controls li {
+    display: inline;
+    marginleft: 3px;
+}
+
+.center-panel {
+		margin: 0 auto;
+}
+
+#side-panel {
+		display: none;
+}
+
+#graph-panel {
+		height: 150px;
 }
