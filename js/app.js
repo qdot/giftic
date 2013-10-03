@@ -277,6 +277,12 @@ $(document).ready(function() {
       $('#loading-panel').append(sprite.get_canvas());
     };
 
+    function url_domain(data) {
+      var a = document.createElement('a');
+      a.href = data;
+      return a.host;
+    }
+
     function url_protocol(data) {
       var a = document.createElement('a');
       a.href = data;
