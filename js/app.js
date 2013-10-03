@@ -307,12 +307,12 @@ $(document).ready(function() {
         // If we're already on the local test webserver, use its bouncer to get
         // around CORS
         loadapp('http://127.0.0.1:8080/gifload' +
-                '?g=' + $('#giflocalurl').val());
+                '?g=' + url);
       } else {
         // If we're remote or else using file:// access, use the remote bouncer
         loadapp('http://distro.nonpolynomial.com/' +
                 'files/giftic/proxy.php?requrl=' +
-                $('#gifremoteurl').val());
+                url);
       }
     });
 
