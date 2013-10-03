@@ -12,6 +12,56 @@ $(document).ready(function() {
     var output = null;
     var muted = true;
 
+    var add_output = function(evt) {
+      var s = document.getElementById('outputselect');
+      var index = s.selectedIndex;
+      var o = s.options[index];
+      var n = o.innerHTML;
+      var outputs = OutputManager.outputList;
+      var i;
+      for (i = 0; i < outputs.length; ++i) {
+        if (outputs[i].name === n) {
+          $('#outputs-panel').append(outputs[i].template());
+          document.addEventListener('gifmove', function(evt) {
+            outputs[i].output(output[sprite.get_current_frame()]);
+          });
+          return;
+        }
+      }
+    };
+
+    var prepare_output = function() {
+      $('#outputs-panel').empty();
+      var outputs = OutputManager.outputList;
+      var s = document.createElement('select');
+      s.setAttribute('id', 'outputselect');
+      var option;
+      var i = 0;
+      for (i = 0; i < outputs.length; ++i) {
+        option = document.createElement('option');
+        option.innerHTML = outputs[i].name;
+        s.appendChild(option);
+      }
+      $('#outputs-panel').append(s);
+      var b = document.createElement('input');
+      b.setAttribute('type', 'button');
+      b.setAttribute('value', 'Add Manager');
+      b.addEventListener('click', add_output);
+      $('#outputs-panel').append(b);
+    };
+
+    var load_json = function() {
+      try {
+        var block = $('#jsonblock').val();
+        var b = JSON.parse(block);
+      } catch (e) {
+        console.log('Cannot load JSON');
+        return;
+      }
+      output = b.outputs;
+      show_graph();
+    };
+
     function on_point_mouse_over(e) {
       var targ;
       if (e.target) targ = e.target;
@@ -117,6 +167,17 @@ $(document).ready(function() {
       document.addEventListener('gifmove', drawPoints, false);
       sprite.move_to(0);
       drawPoints();
+      show_graph();
+    };
+
+    var show_graph = function() {
+      $.jqplot.config.enablePlugins = true;
+      if ($('#canvas-panel').hasClass('center-panel')) {
+        $('#canvas-panel').removeClass('center-panel');
+        $('#canvas-panel').addClass('pull-left');
+        $('#side-panel').show();
+      }
+      $('#graph-panel').empty();
       var z = (function() {
         var ar = [];
         for (var i = 0; i < output.length; ++i) {
@@ -124,11 +185,6 @@ $(document).ready(function() {
         }
         return ar;
       })();
-      $.jqplot.config.enablePlugins = true;
-      $('#canvas-panel').removeClass('center-panel');
-      $('#canvas-panel').addClass('pull-left');
-      $('#side-panel').show();
-      $('#graph-panel').empty();
       var plot = $.jqplot('graph-panel', [z],
                           {
                             // Series options are specified as an array of
@@ -198,6 +254,7 @@ $(document).ready(function() {
       $('#canvas-panel').width(canvas.width);
       $('#canvas-panel').height(canvas.height + 30);
       $('#side-panel').width(500);
+      prepare_output();
       canvas.addEventListener('click', on_canvas_click, false);
     };
 
