@@ -21,24 +21,25 @@ textarea {
 		padding: 10px;
 }
 
-#app-background {
-		z-index: -1;
+.centered {
 		position: absolute;
 		left: 50%;
 		top: 50%;
 		transform: translate(-50%, -50%);
+		-webkit-transform: translate(-50%, -50%);
+		-ms-transform: translate(-50%, -50%);
+}
+
+#app-background {
+		z-index: -1;
 		color: #dfdfdf;
 		text-align: center;
 		vertical-align: middle;
 		font-size: 250pt;
 }
 
-#file-panel { 
-		position: absolute;
+#file-panel {
 		color: #000;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
 		width: 30%;
 		font-size: 20pt;
 		text-align: center;
@@ -65,20 +66,12 @@ textarea {
 
 #application {
 		display: none;
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
 		width: 60%;
 }
 
 #loading-panel {
 		display: none;
 		text-align: center;
-		position: absolute;
-		left: 50%;
-		top: 50%;
-		transform: translate(-50%, -50%);
 }
 
 #sprite-controls {
@@ -91,17 +84,17 @@ textarea {
 
 .controls ul {
 		font-size: 14pt;
-    liststyle: none;
+    list-style: none;
     padding: 0px;
-    marginleft: 0px;
-    marginright: 0px;
-    margintop: 0px;
-    marginbottom: 5px;
+    margin-left: 0px;
+    margin-right: 0px;
+    margin-top: 0px;
+    margin-bottom: 5px;
 }
 
 .controls li {
     display: inline;
-    marginleft: 3px;
+    margin-left: 3px;
 }
 
 .center-panel {
