@@ -328,6 +328,11 @@ $(document).ready(function() {
       $('#fileselect').val($('#fileinput').val());
     });
 
+    $(document).on('keypress', function(eve) {
+      if (eve.keyCode == 13 && $('#gobutton').is(':visible')) {
+        $('#gobutton').click();
+      }
+    });
   });
 
   giftic();
