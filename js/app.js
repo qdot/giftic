@@ -299,9 +299,6 @@ $(document).ready(function() {
       var dochost = url_domain(docurl);
       var urlhost = url_domain(url);
       if (urlhost === dochost) {
-        // If we're on the same domain, load as usual. This may break if we're
-        // trying to open file:// while accessing giftic from file:// but
-        // whatever.
         loadapp(url);
       } else if (dochost === 'localhost' || dochost === '127.0.0.1') {
         // If we're already on the local test webserver, use its bouncer to get
@@ -309,10 +306,8 @@ $(document).ready(function() {
         loadapp('http://127.0.0.1:8080/gifload' +
                 '?g=' + url);
       } else {
-        // If we're remote or else using file:// access, use the remote bouncer
-        loadapp('http://distro.nonpolynomial.com/' +
-                'files/giftic/proxy.php?requrl=' +
-                url);
+        // TODO: Pop a warning about CORS, allow user to choose to go ahead,
+        // choose another file. Also make automatic.
       }
     });
 
