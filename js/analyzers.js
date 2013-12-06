@@ -66,9 +66,9 @@ var PointFrameArray = function(x, y) {
 var IntensityAnalyzer = function() {
   var max;
 
-  // TODO: This make horrible assumption that all points are moving the same
-  // direction at all times. Should fix this when awake enough to make better
-  // algorithm. Does job for now.
+  // TODO: This makes the horrible assumption that all points are moving the
+  // same direction at all times. Should fix this when awake enough to make
+  // better algorithm. Does job for now.
   var analyze = function(points) {
     var i;
     var frame_intensities = [];

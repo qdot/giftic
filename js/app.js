@@ -161,6 +161,8 @@ $(document).ready(function() {
       var o = new OpticalFlowAnalyzer();
       document.removeEventListener('gifmove', drawPoints, false);
       o.analyze(sprite, points);
+      //Remove all points that didn't live through processing
+      points = points.filter(function(p) { return p.get_status() > 0;});
       var a = new IntensityAnalyzer();
       output = a.analyze(points);
       update_export();
