@@ -163,6 +163,12 @@ $(document).ready(function() {
       o.analyze(sprite, points);
       //Remove all points that didn't live through processing
       points = points.filter(function(p) { return p.get_status() > 0;});
+      if (points.length === 0) {
+        $('#error-panel').show();
+        $('#error-message').text('No points were able to be tracked for movement. Please select new points.');
+        return;
+      }
+      $('#error-panel').hide();
       var a = new IntensityAnalyzer();
       output = a.analyze(points);
       update_export();

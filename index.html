@@ -26,48 +26,51 @@
   <body>
     <div class="container">
 			<div id="center-panel">
-			<div id="app-background" class="centered">
-				giftic
-			</div>
-			<div id="file-panel" class="centered">
-				<p>Select a file or enter a URL</p>
-				<input type='text' id='fileselect'/>
-				<button type="button" id='filebutton' class="btn btn-default"><strong>Browse for File</strong></button><button type="button" id='gobutton' class="btn btn-default"><strong>Go</strong></button>
-				<input type='file' id='fileinput' accept='image/gif' />
-			</div>
-			<div id="loading-panel" class="centered">
-				<h1>Loading Image...</h1>
-			</div>
-			<div id="application" class="centered">
-				<div class="giftic-panel center-panel" id="canvas-panel">
-					<div class="pull-left controls" id="sprite-controls">
-						<ul>
-							<li id="play"><i class="icon-play"></i></li>
-							<li id="pause"><i class="icon-pause"></i></li>
-							<li id="stop"><i class="icon-stop"></i></li>
-							<li id="backward"><i class="icon-step-backward"></i></li>
-							<li id="forward"><i class="icon-step-forward"></i></li>
-							<li id="loopgif"><i class="icon-refresh"></i></li>
-						</ul>
-					</div>
-					<div class="pull-right controls" id="analysis-controls">
-						<ul>
-							<li id="analyze"><i class="icon-eye-open"></i></li>
-							<li id="help"><i class="icon-question-sign"></i></li>
-						</ul>
-					</div>
-				</div>
-				<div class="pull-right" id="side-panel">
-					<div class="giftic-panel" id="graph-panel">
-					</div>
-					<div class="giftic-panel" id="text-panel">
-						<textarea id="json-export"></textarea><input type="button" value="Copy to Clipboard" id="export-copy" />
-					</div>
-					<div class="giftic-panel" id="outputs-panel">
-					</div>
-				</div>
-			</div>
-		</div>
+			  <div id="app-background" class="centered">
+				  giftic
+			  </div>
+			  <div id="file-panel" class="centered">
+				  <p>Select a file or enter a URL</p>
+				  <input type='text' id='fileselect'/>
+				  <button type="button" id='filebutton' class="btn btn-default"><strong>Browse for File</strong></button><button type="button" id='gobutton' class="btn btn-default"><strong>Go</strong></button>
+				  <input type='file' id='fileinput' accept='image/gif' />
+			  </div>
+			  <div id="loading-panel" class="centered">
+				  <h1>Loading Image...</h1>
+			  </div>
+			  <div id="application" class="centered">
+				  <div class="giftic-panel center-panel" id="canvas-panel">
+					  <div class="pull-left controls" id="sprite-controls">
+						  <ul>
+							  <li id="play"><i class="icon-play"></i></li>
+							  <li id="pause"><i class="icon-pause"></i></li>
+							  <li id="stop"><i class="icon-stop"></i></li>
+							  <li id="backward"><i class="icon-step-backward"></i></li>
+							  <li id="forward"><i class="icon-step-forward"></i></li>
+							  <li id="loopgif"><i class="icon-refresh"></i></li>
+						  </ul>
+					  </div>
+					  <div class="pull-right controls" id="analysis-controls">
+						  <ul>
+							  <li id="analyze"><i class="icon-eye-open"></i></li>
+							  <li id="help"><i class="icon-question-sign"></i></li>
+						  </ul>
+					  </div>
+				  </div>
+				  <div class="pull-right" id="side-panel">
+					  <div class="giftic-panel" id="graph-panel">
+					  </div>
+					  <div class="giftic-panel" id="text-panel">
+						  <textarea id="json-export"></textarea><input type="button" value="Copy to Clipboard" id="export-copy" />
+					  </div>
+					  <div class="giftic-panel" id="outputs-panel">
+					  </div>
+				  </div>
+          <div class="giftic-panel" id="error-panel">
+				    <p id="error-message"></p>
+			    </div>
+			  </div>
+		  </div>
 		</div>
 	</body>
 </html>
